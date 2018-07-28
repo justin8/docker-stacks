@@ -12,4 +12,5 @@ if [[ $1 != '--fast' ]]; then
 fi
 
 echo "Installing/updating stack..."
+source vars
 docker stack deploy --compose-file docker-stack.yml mediaserver
