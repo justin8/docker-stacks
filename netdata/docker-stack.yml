@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  netdata:
+    image: firehol/netdata
+    cap_add:
+      - SYS_PTRACE
+    healthcheck:
+      test: "curl -ILX GET localhost:19999"
+    ports:
+      - "19999:19999"
+    volumes:
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "./netdata.conf:/etc/netdata/netdata.conf:ro"
