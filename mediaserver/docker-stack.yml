@@ -1,0 +1,94 @@
+version: "3.7"
+
+services:
+  traefik:
+    image: traefik
+    command:
+      - "--acme.domains=*.${DOMAIN}"
+      - "--acme.email=justin@dray.id.au"
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ${CONFIG_DIR}/traefik/acme:/acme
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role==manager]
+
+  transmission:
+    image: linuxserver/transmission
+    volumes:
+      - ${CONFIG_DIR}/transmission:/config
+      - ${STORAGE_DIR}:/storage
+    environment:
+      - TZ=Australia/Brisbane
+      - PUID=${PUID}
+      - PGID=${PGID}
+    healthcheck:
+      test: "curl -ILXGET http://localhost:9091"
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.port=9091
+        - traefik.frontend.rule=Host:transmission.${DOMAIN}
+
+  sonarr:
+    image: linuxserver/sonarr
+    environment:
+      - "PGID=${PGID}"
+      - "PUID=${PUID}"
+    depends_on:
+      - jackett
+    volumes:
+      - $CONFIG_DIR/sonarr:/config:rw
+      - ${STORAGE_DIR}:${STORAGE_DIR}:rw
+    healthcheck:
+      test: "curl -ILXGET http://localhost:8989"
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.port=8989
+        - traefik.frontend.rule=Host:sonarr.${DOMAIN}
+
+  radarr:
+    image: linuxserver/radarr
+    environment:
+      - "PGID=${PGID}"
+      - "PUID=${PUID}"
+    depends_on:
+      - jackett
+    volumes:
+      - $CONFIG_DIR/radarr:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}:rw
+    healthcheck:
+      test: "curl -ILXGET http://localhost:7878"
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.port=7878
+        - traefik.frontend.rule=Host:radarr.${DOMAIN}
+
+  jackett:
+    image: linuxserver/jackett
+    environment:
+      - "PGID=${PGID}"
+      - "PUID=${PUID}"
+    volumes:
+      - $CONFIG_DIR/jackett:/config
+    healthcheck:
+      test: "curl -ILXGET http://localhost:9117"
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.port=9117
+        - traefik.frontend.rule=Host:jackett.${DOMAIN}

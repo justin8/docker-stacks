@@ -1,0 +1,57 @@
+debug = true
+#loglevel = "ERROR"
+
+defaultEntryPoints = ["https", "http"]
+
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+        [entryPoints.http.redirect]
+        entryPoint = "https"
+    [entryPoints.https]
+    address = ":443"
+    [entryPoints.https.tls]
+
+[retry]
+
+[docker]
+watch = true
+swarmMode = true
+
+[acme]
+storage = "/acme/acme.json"
+entryPoint = "https"
+onHostRule = true
+#caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+    [acme.dnsChallenge]
+    provider = "cloudflare"
+
+# Manually added servers
+[file]
+    [frontends]
+        [frontends.hass]
+        backend = "hass"
+        passHostHeader = true
+            [frontends.hass.routes.route0]
+            rule = "Host:hass.dray.id.au"
+        [frontends.node-red]
+        backend = "node-red"
+        passHostHeader = true
+            [frontends.node-red.routes.route0]
+            rule = "Host:node-red.dray.id.au"
+        [frontends.backups]
+        backend = "backups"
+        passHostHeader = true
+            [frontends.backups.routes.route0]
+            rule = "Host:backups.dray.id.au"
+
+    [backends]
+        [backends.hass]
+            [backends.hass.servers.server0]
+            url = "http://192.168.1.107:8123"
+        [backends.node-red]
+            [backends.node-red.servers.server0]
+            url = "http://192.168.1.107:1880"
+        [backends.backups]
+            [backends.backups.servers.server0]
+            url = "http://192.168.1.15:8200"
