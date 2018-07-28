@@ -1,0 +1,5 @@
+export EMAIL=
+export CLOUDFLARE_EMAIL=
+export CLOUDFLARE_API_KEY=
+export CONFIG_DIR=
+export DOMAIN=
