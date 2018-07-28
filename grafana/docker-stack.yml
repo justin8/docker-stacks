@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  influxdb:
+    image: influxdb:1.4-alpine
+    volumes:
+      - "${INFLUX_STORAGE}/storage:/var/lib/influxdb:rw"
+      - "${INFLUX_STORAGE}/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
+    ports:
+      - "8086:8086"
+      - "4242:4242"
+    deploy:
+      replicas: 1
+
+  grafana:
+    image: grafana/grafana:4.6.3
+    volumes:
+      - "${GRAFANA_STORAGE}:/var/lib/grafana:rw"
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.port=3000
+        - traefik.frontend.rule=Host:grafana.${DOMAIN}
+
+networks:
+  default:
+    external:
+      name: traefik

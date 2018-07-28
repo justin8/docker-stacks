@@ -17,5 +17,6 @@ tags
 ### Repo specific ###
 mediaserver/vars
 netdata/netdata.conf
+grafana/grafana.conf
 traefik/vars
 traefik/traefik.toml

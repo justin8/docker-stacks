@@ -1,0 +1,4 @@
+# Make a copy of this and fill it in
+export INFLUX_STORAGE=/var/lib/influxdb
+export GRAFANA_STORAGE=/var/lib/grafana
+export DOMAIN=
