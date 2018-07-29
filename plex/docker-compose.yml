@@ -16,6 +16,8 @@ services:
     volumes:
       - ${CONFIG_DIR}/plex:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}
+    healthcheck:
+      test: "curl -ILXGET localhost:32400/web"
     deploy:
       replicas: 1
       placement:
