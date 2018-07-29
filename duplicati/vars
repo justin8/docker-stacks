@@ -1,0 +1,4 @@
+export CONFIG_DIR=/storage/server-files/config
+export PUID=1001
+export PGID=1005
+export DOMAIN=dray.id.au

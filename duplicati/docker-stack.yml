@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  duplicati:
+    image: linuxserver/duplicati
+    environment:
+      - "PGID=${PGID}"
+      - "PUID=${PUID}"
+    volumes:
+      - ${CONFIG_DIR}/duplicati:/config
+      - /:/source
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role==manager]
+      labels:
+        - traefik.enable=true
+        - traefik.port=8200
+        - traefik.frontend.rule=Host:backups.${DOMAIN}
+
+networks:
+  default:
+    external:
+      name: traefik
