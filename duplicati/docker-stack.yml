@@ -9,6 +9,8 @@ services:
     volumes:
       - ${CONFIG_DIR}/duplicati:/config
       - /:/source
+    healthcheck:
+      test: "curl -ILXGET localhost:8200"
     deploy:
       replicas: 1
       placement:
