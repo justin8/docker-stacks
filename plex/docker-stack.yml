@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  plex:
+    image: linuxserver/plex
+    ports:
+      - "32400:32400"
+      - "32400:32400/udp"
+      - "32469:32469"
+      - "32469:32469/udp"
+      - "1900:1900/udp"
+    environment:
+      - "PGID=${PGID}"
+      - "PUID=${PUID}"
+    volumes:
+      - ${CONFIG_DIR}/plex:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role==manager]
