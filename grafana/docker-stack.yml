@@ -9,6 +9,8 @@ services:
     ports:
       - "8086:8086"
       - "4242:4242"
+    healthcheck:
+      test: "nc -z localhost:8086"
     deploy:
       replicas: 1
 
@@ -16,6 +18,8 @@ services:
     image: grafana/grafana:4.6.3
     volumes:
       - "${GRAFANA_STORAGE}:/var/lib/grafana:rw"
+    healthcheck:
+      test: "curl -ILXGET localhost:3000"
     deploy:
       replicas: 1
       labels:
