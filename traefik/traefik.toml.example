@@ -48,10 +48,10 @@ onHostRule = true
     [backends]
         [backends.hass]
             [backends.hass.servers.server0]
-            url = "http://192.168.1.107:8123"
+            url = "http://192.168.1.15:8123"
         [backends.node-red]
             [backends.node-red.servers.server0]
-            url = "http://192.168.1.107:1880"
+            url = "http://192.168.1.15:1880"
         [backends.backups]
             [backends.backups.servers.server0]
             url = "http://192.168.1.15:8200"
