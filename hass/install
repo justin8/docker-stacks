@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+dir="$(dirname "$(readlink -f "$0")")"
+name="$(basename "$dir")"
+cd "$dir"
+image_list="$(cat docker-stack.yml|grep -E '^\s+image:' | awk '{print $2}')"
+
+if [[ $1 != '--fast' ]]; then
+	echo "Pulling latest images..."
+	for image in $image_list; do
+		if [[ $image != "node-red-local:latest" ]]; then
+			docker pull $image
+		fi
+	done
+
+(
+	cd node-red
+	node_red_image="$(cat Dockerfile|grep -E '^FROM' | awk '{print $2}')"
+	docker pull $node_red_image
+	docker build -t node-red-local:latest .
+)
+fi
+
+echo "Installing/updating stack..."
+source vars
+docker stack deploy --compose-file docker-stack.yml hass
