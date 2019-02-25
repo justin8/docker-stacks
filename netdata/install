@@ -1,0 +1,32 @@
+#!/bin/bash
+dir="$(dirname "$(readlink -f "$0")")"
+
+echo "Installing/updating stack..."
+cat <<-EOF > /etc/systemd/system/netdata.service
+	[Unit]
+	Description=Netdata metrics service
+	After=docker.service network-online.target
+	Requires=docker.service network-online.target
+
+	[Service]
+	WorkingDirectory=$dir
+	Type=oneshot
+	RemainAfterExit=yes
+
+	ExecStartPre=-/usr/local/bin/docker-compose pull --quiet
+	ExecStartPre=-/usr/local/bin/docker-compose build --quiet
+	ExecStart=/usr/local/bin/docker-compose up -d
+
+	ExecStop=/usr/local/bin/docker-compose down
+
+	ExecReload=/usr/local/bin/docker-compose pull --quiet
+	ExecReload=/usr/local/bin/docker-compose build --quiet
+	ExecReload=/usr/local/bin/docker-compose up -d
+
+	[Install]
+	WantedBy=multi-user.target
+EOF
+
+echo "Starting service..."
+systemctl daemon-reload
+systemctl restart netdata

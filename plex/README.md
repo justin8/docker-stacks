@@ -11,7 +11,7 @@ Docker swarm doesn't support custom network modes yet, and plex refuses to let y
 
 To run the service:
 
-1. Make a copy of `vars.example` as `vars` in this folder and customize it
+1. Make a copy of `env.example` as `.env` in this folder and customize it
 2. Ensure that all required directories already exist
 3. Run `./start` to start the service with docker-compose. (This image currently requires things that are not supported in docker swarm mode)
 4. Call `./start` while in the current directory on startup through whatever means (in the worst case, rc.local)
