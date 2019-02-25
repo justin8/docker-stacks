@@ -16,11 +16,3 @@ services:
       - 8880:8880 # Unifi communication port
       - 6789:6789 # For throughput test
     restart: unless-stopped
-
-# Uncomment to make accessible publically?
-#    deploy:
-#      replicas: 1
-#      labels:
-#        - traefik.enable=true
-#        - traefik.port=8443
-#        - traefik.frontend.rule=Host:unifi.${DOMAIN}

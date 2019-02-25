@@ -1,10 +1,11 @@
 #!/bin/bash
 dir="$(dirname "$(readlink -f "$0")")"
+service_name="$(basename "$dir")"
 
 echo "Installing/updating stack..."
-cat <<-EOF > /etc/systemd/system/netdata.service
+cat <<-EOF > /etc/systemd/system/$service_name.service
 	[Unit]
-	Description=Netdata metrics service
+	Description=$service_name
 	After=docker.service network-online.target
 	Requires=docker.service network-online.target
 
@@ -29,4 +30,5 @@ EOF
 
 echo "Starting service..."
 systemctl daemon-reload
-systemctl restart netdata
+systemctl restart $service_name
+systemctl enable $service_name

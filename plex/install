@@ -1,12 +1,11 @@
 #!/bin/bash
 dir="$(dirname "$(readlink -f "$0")")"
-description="Plex Media Server"
 service_name="$(basename "$dir")"
 
 echo "Installing/updating stack..."
 cat <<-EOF > /etc/systemd/system/$service_name.service
 	[Unit]
-	Description=$description
+	Description=$service_name
 	After=docker.service network-online.target
 	Requires=docker.service network-online.target
 
@@ -32,3 +31,4 @@ EOF
 echo "Starting service..."
 systemctl daemon-reload
 systemctl restart $service_name
+systemctl enable $service_name

@@ -16,6 +16,7 @@ tags
 
 ### Repo specific ###
 */vars
+*/.env
 netdata/netdata.conf
 grafana/grafana.conf
 traefik/traefik.toml
