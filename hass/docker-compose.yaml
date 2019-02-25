@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  home-assistant:
+    image: homeassistant/home-assistant
+    network_mode: host
+    volumes:
+      - ${CONFIG_DIR}/hass:/config
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: "curl -ILXGET http://localhost:8123"
+  node-red:
+    build: ./node-red
+    ports:
+      - "1880:1880"
+    volumes:
+      - ${CONFIG_DIR}/node-red:/data
+    healthcheck:
+      test: "curl -ILXGET http://localhost:1880"
+

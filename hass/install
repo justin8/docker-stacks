@@ -1,26 +1,34 @@
 #!/bin/bash
-set -e
 dir="$(dirname "$(readlink -f "$0")")"
-name="$(basename "$dir")"
-cd "$dir"
-image_list="$(cat docker-stack.yml|grep -E '^\s+image:' | awk '{print $2}')"
-
-if [[ $1 != '--fast' ]]; then
-	echo "Pulling latest images..."
-	for image in $image_list; do
-		if [[ $image != "node-red-local:latest" ]]; then
-			docker pull $image
-		fi
-	done
-
-(
-	cd node-red
-	node_red_image="$(cat Dockerfile|grep -E '^FROM' | awk '{print $2}')"
-	docker pull $node_red_image
-	docker build -t node-red-local:latest .
-)
-fi
+description="Home Assistant"
+service_name="$(basename "$dir")"
 
 echo "Installing/updating stack..."
-source vars
-docker stack deploy --compose-file docker-stack.yml hass
+cat <<-EOF > /etc/systemd/system/$service_name.service
+	[Unit]
+	Description=$description
+	After=docker.service network-online.target
+	Requires=docker.service network-online.target
+
+	[Service]
+	WorkingDirectory=$dir
+	Type=oneshot
+	RemainAfterExit=yes
+
+	ExecStartPre=-/usr/local/bin/docker-compose pull --quiet
+	ExecStartPre=-/usr/local/bin/docker-compose build --quiet
+	ExecStart=/usr/local/bin/docker-compose up -d
+
+	ExecStop=/usr/local/bin/docker-compose down
+
+	ExecReload=/usr/local/bin/docker-compose pull --quiet
+	ExecReload=/usr/local/bin/docker-compose build --quiet
+	ExecReload=/usr/local/bin/docker-compose up -d
+
+	[Install]
+	WantedBy=multi-user.target
+EOF
+
+echo "Starting service..."
+systemctl daemon-reload
+systemctl restart $service_name
