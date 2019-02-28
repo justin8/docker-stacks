@@ -1,0 +1,42 @@
+#!/bin/bash
+set -x
+
+if [[ $(basename $0) == compose-installer ]]; then
+	echo "Don't call this script directly. Use it from one of the stack directories"
+	exit 1
+fi
+
+dir="$(dirname "$0")"
+cd "$dir"
+service_name="$(basename "$PWD")"
+description="$service_name"
+
+echo "Installing/updating stack..."
+cat <<-EOF > /etc/systemd/system/$service_name.service
+	[Unit]
+	Description=$description
+	After=docker.service network-online.target
+	Requires=docker.service network-online.target
+
+	[Service]
+	WorkingDirectory=$dir
+	Type=oneshot
+	RemainAfterExit=yes
+
+	ExecStartPre=-/usr/local/bin/docker-compose pull --quiet
+	ExecStartPre=-/usr/local/bin/docker-compose build
+	ExecStart=/usr/local/bin/docker-compose up -d
+
+	ExecStop=/usr/local/bin/docker-compose down
+
+	ExecReload=/usr/local/bin/docker-compose pull --quiet
+	ExecReload=/usr/local/bin/docker-compose build --quiet
+	ExecReload=/usr/local/bin/docker-compose up -d
+
+	[Install]
+	WantedBy=multi-user.target
+EOF
+
+echo "Starting service..."
+systemctl daemon-reload
+systemctl restart $service_name
