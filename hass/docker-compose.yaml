@@ -16,7 +16,6 @@ services:
     volumes:
       - ${CONFIG_DIR}/node-red:/data
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     healthcheck:
       test: "curl -ILXGET http://localhost:1880"
 
