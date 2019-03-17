@@ -6,9 +6,9 @@ if [[ $(basename $0) == compose-installer ]]; then
 	exit 1
 fi
 
-dir="$(dirname "$0")"
-cd "$dir"
-service_name="$(basename "$PWD")"
+cd $(dirname "$0")
+dir=$PWD
+service_name="$(basename "$dir")"
 description="$service_name"
 
 echo "Installing/updating stack..."
