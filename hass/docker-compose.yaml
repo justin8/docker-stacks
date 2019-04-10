@@ -3,6 +3,7 @@ version: "3.7"
 services:
   home-assistant:
     image: homeassistant/home-assistant
+    restart: always
     network_mode: host
     volumes:
       - ${CONFIG_DIR}/hass:/config
@@ -11,6 +12,7 @@ services:
       test: "curl -ILXGET http://localhost:8123"
   node-red:
     build: ./node-red
+    restart: always
     ports:
       - "1880:1880"
     volumes:
