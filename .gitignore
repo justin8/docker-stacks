@@ -15,8 +15,7 @@ Session.vim
 tags
 
 ### Repo specific ###
-*/vars
-*/.env
+/.env
 netdata/netdata.conf
 grafana/grafana.conf
 traefik/traefik.toml

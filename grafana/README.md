@@ -1,4 +1,4 @@
-# Media server stack
+# Grafana stack
 
 This is a basic docker stack setup that will run grafana, hooking in to traefik for reverse proxying
 
