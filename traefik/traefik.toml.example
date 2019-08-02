@@ -10,7 +10,13 @@ defaultEntryPoints = ["https", "http"]
         entryPoint = "https"
     [entryPoints.https]
     address = ":443"
-    [entryPoints.https.tls]
+        [entryPoints.https.tls]
+    [entryPoints.api]
+    address = ":8081"
+
+[api]
+entryPoint = "api"
+dashboard = true
 
 [retry]
 
@@ -23,7 +29,9 @@ storage = "/acme/acme.json"
 entryPoint = "https"
 onHostRule = true
 #caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
-    [acme.dnsChallenge]
+[[acme.domains]]
+    main = "*.dray.id.au"
+[acme.dnsChallenge]
     provider = "cloudflare"
 
 # Manually added servers
