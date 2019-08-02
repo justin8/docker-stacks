@@ -11,6 +11,15 @@ dir=$PWD
 service_name="$(basename "$dir")"
 description="$service_name"
 
+image_list="$(cat docker-compose.yaml|grep -E '^\s+image:' | awk '{print $2}')"
+
+if [[ $1 != '--fast' ]]; then
+	echo "Pulling latest images..."
+	for image in $image_list; do
+		docker pull $image
+	done
+fi
+
 echo "Installing/updating stack..."
 cat <<-EOF > /etc/systemd/system/$service_name.service
 	[Unit]

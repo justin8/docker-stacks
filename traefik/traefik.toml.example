@@ -29,8 +29,6 @@ storage = "/acme/acme.json"
 entryPoint = "https"
 onHostRule = true
 #caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
-[[acme.domains]]
-    main = "*.dray.id.au"
 [acme.dnsChallenge]
     provider = "cloudflare"
 

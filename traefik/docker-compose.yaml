@@ -6,6 +6,7 @@ services:
     networks:
       - traefik
     command:
+      - "--docker.domain=${DOMAIN}"
       - "--acme.domains=*.${DOMAIN}"
       - "--acme.email=${EMAIL}"
     ports:
@@ -14,15 +15,11 @@ services:
       - "8081:8081"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
-      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.toml:/etc/traefik/traefik.toml
       - ${CONFIG_DIR}/traefik/acme:/acme
-    deploy:
-      replicas: 1
-      placement:
-        constraints: [node.role==manager]
 
 networks:
   traefik:

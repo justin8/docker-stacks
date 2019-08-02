@@ -1,5 +1,0 @@
-export CONFIG_DIR=
-export DOMAIN=
-export STORAGE_DIR=
-export PUID=
-export PGID=

@@ -1,17 +1,1 @@
-#!/bin/bash
-set -e
-dir="$(dirname "$(readlink -f "$0")")"
-name="$(basename "$dir")"
-cd "$dir"
-image_list="$(cat docker-stack.yml|grep -E '^\s+image:' | awk '{print $2}')"
-
-if [[ $1 != '--fast' ]]; then
-	echo "Pulling latest images..."
-	for image in $image_list; do
-		docker pull $image
-	done
-fi
-
-echo "Installing/updating stack..."
-source vars
-docker stack deploy --compose-file docker-stack.yml traefik
+../compose-installer
