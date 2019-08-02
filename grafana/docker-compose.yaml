@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   influxdb:
-    image: influxdb:1.4-alpine
+    image: influxdb:1.7-alpine
     volumes:
       - "${CONFIG_DIR}/influxdb/storage:/var/lib/influxdb:rw"
       - "${CONFIG_DIR}/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
@@ -13,7 +13,7 @@ services:
       test: "nc -z localhost:8086"
 
   grafana:
-    image: grafana/grafana:4.6.3
+    image: grafana/grafana:6.2.5
     volumes:
       - "${CONFIG_DIR}/grafana:/var/lib/grafana:rw"
     healthcheck:
