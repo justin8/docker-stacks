@@ -4,16 +4,12 @@ services:
   home-assistant:
     image: homeassistant/home-assistant
     restart: always
-    network_mode: host
+    network_mode: host # hue bridge and xiaomi hub both require this currently
     volumes:
       - ${CONFIG_DIR}/hass:/config
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: "curl -ILXGET http://localhost:8123"
-    labels:
-      - traefik.enable=true
-      - traefik.port=8123
-      - traefik.frontend.rule=Host:hass.${DOMAIN}
   node-red:
     build: ./node-red
     restart: always
@@ -36,3 +32,8 @@ services:
       - ${CONFIG_DIR}/mosquitto:/mosquitto
     healthcheck:
       test: "nc -z localhost 1883"
+
+networks:
+  default:
+    external:
+      name: traefik
