@@ -45,3 +45,4 @@ EOF
 echo "Starting service..."
 systemctl daemon-reload
 systemctl restart $service_name
+systemctl enable $service_name
