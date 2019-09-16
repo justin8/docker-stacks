@@ -10,18 +10,21 @@ cd $(dirname "$0")
 dir=$PWD
 service_name="$(basename "$dir")"
 description="$service_name"
+dependencies=""
 
 if [[ $1 != '--fast' ]]; then
 	echo "Pulling latest images..."
 	docker-compose pull
 fi
 
+if [[ $service_name != "traefik" ]]; then dependencies="traefik.service"; fi
+
 echo "Installing/updating stack..."
 cat <<-EOF > /etc/systemd/system/$service_name.service
 	[Unit]
 	Description=$description
-	After=docker.service network-online.target
-	Requires=docker.service network-online.target
+	After=docker.service network-online.target $dependencies
+	Requires=docker.service network-online.target $dependencies
 
 	[Service]
 	WorkingDirectory=$dir
@@ -35,7 +38,7 @@ cat <<-EOF > /etc/systemd/system/$service_name.service
 	ExecStop=/usr/local/bin/docker-compose down
 
 	ExecReload=/usr/local/bin/docker-compose pull --quiet
-	ExecReload=/usr/local/bin/docker-compose build --quiet
+	ExecReload=/usr/local/bin/docker-compose build
 	ExecReload=/usr/local/bin/docker-compose up -d
 
 	[Install]
