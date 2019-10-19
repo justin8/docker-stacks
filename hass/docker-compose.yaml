@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:0.97.2
+    image: homeassistant/home-assistant:stable
     restart: always
     network_mode: host # hue bridge and xiaomi hub both require this currently
     volumes:
