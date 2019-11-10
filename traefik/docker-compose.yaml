@@ -6,16 +6,11 @@ services:
     networks:
       - traefik
     command:
-      - "--docker.domain=${DOMAIN}"
-      - "--acme.domains=*.${DOMAIN}"
       - "--acme.email=${EMAIL}"
     ports:
       - "80:80"
       - "443:443"
       - "8081:8081"
-    environment:
-      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
-      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.toml:/etc/traefik/traefik.toml
