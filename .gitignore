@@ -19,3 +19,4 @@ tags
 netdata/netdata.conf
 grafana/grafana.conf
 traefik/traefik.toml
+mediaserver/vpn

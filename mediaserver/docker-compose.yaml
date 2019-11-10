@@ -1,8 +1,31 @@
 version: "3.7"
 
 services:
+  vpn:
+    image: justin8/openvpn-client
+    restart: unless-stopped
+    volumes:
+      - ./vpn:/vpn
+    devices:
+      - /dev/net/tun
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 1.1.1.1
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    ports:
+      - "9091:9091"
+      - "8989:8989"
+      - "7878:7878"
+      - "9117:9117"
+    command: "-f ''"
+
   transmission:
     image: linuxserver/transmission
+    network_mode: "service:vpn"
     volumes:
       - ${CONFIG_DIR}/transmission:/config
       - ${STORAGE_DIR}:/storage
@@ -12,13 +35,10 @@ services:
       - PGID=${PGID}
     healthcheck:
       test: "curl -ILXGET http://localhost:9091"
-    labels:
-      - traefik.enable=true
-      - traefik.port=9091
-      - traefik.frontend.rule=Host:transmission.${DOMAIN}
 
   sonarr:
     image: linuxserver/sonarr
+    network_mode: "service:vpn"
     environment:
       - "PGID=${PGID}"
       - "PUID=${PUID}"
@@ -29,13 +49,10 @@ services:
       - ${STORAGE_DIR}:${STORAGE_DIR}:rw
     healthcheck:
       test: "curl -ILXGET http://localhost:8989"
-    labels:
-      - traefik.enable=true
-      - traefik.port=8989
-      - traefik.frontend.rule=Host:sonarr.${DOMAIN}
 
   radarr:
     image: linuxserver/radarr
+    network_mode: "service:vpn"
     environment:
       - "PGID=${PGID}"
       - "PUID=${PUID}"
@@ -46,13 +63,10 @@ services:
       - ${STORAGE_DIR}:${STORAGE_DIR}:rw
     healthcheck:
       test: "curl -ILXGET http://localhost:7878"
-    labels:
-      - traefik.enable=true
-      - traefik.port=7878
-      - traefik.frontend.rule=Host:radarr.${DOMAIN}
 
   jackett:
     image: linuxserver/jackett
+    network_mode: "service:vpn"
     environment:
       - "PGID=${PGID}"
       - "PUID=${PUID}"
@@ -60,12 +74,3 @@ services:
       - $CONFIG_DIR/jackett:/config
     healthcheck:
       test: "curl -ILXGET http://localhost:9117"
-    labels:
-      - traefik.enable=true
-      - traefik.port=9117
-      - traefik.frontend.rule=Host:jackett.${DOMAIN}
-
-networks:
-  default:
-    external:
-      name: traefik
