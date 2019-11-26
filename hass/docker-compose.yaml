@@ -4,12 +4,14 @@ services:
   home-assistant:
     image: homeassistant/home-assistant:stable
     restart: always
-    network_mode: host # hue bridge and xiaomi hub both require this currently
+    network_mode: host # most things with auto-discovery such as homekit require this currently
     volumes:
       - ${CONFIG_DIR}/hass:/config
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: "curl -ILXGET http://localhost:8123"
+    depends_on:
+      - mqtt
   node-red:
     build: ./node-red
     restart: always
@@ -18,22 +20,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: "curl -ILXGET http://localhost:1880"
+    depends_on:
+      - home-assistant
     labels:
       - traefik.enable=true
       - traefik.port=1880
       - traefik.frontend.rule=Host:node-red.${DOMAIN}
-#  node-red-old:
-#    build: ./node-red-old
-#    restart: always
-#    volumes:
-#      - ${CONFIG_DIR}/node-red-old:/data
-#      - /etc/localtime:/etc/localtime:ro
-#    healthcheck:
-#      test: "curl -ILXGET http://localhost:1880"
-#    labels:
-#      - traefik.enable=true
-#      - traefik.port=1880
-#      - traefik.frontend.rule=Host:node-red-old.${DOMAIN}
   mqtt:
     image: eclipse-mosquitto
     restart: always
@@ -44,7 +36,15 @@ services:
       - ${CONFIG_DIR}/mosquitto:/mosquitto
     healthcheck:
       test: "nc -z localhost 1883"
-
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    restart: always
+    volumes:
+      - ${CONFIG_DIR}/zigbee2mqtt:/app/data
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
+    depends_on:
+      - mqtt
 networks:
   default:
     external:
