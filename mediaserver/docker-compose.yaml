@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   vpn:
-    image: justin8/openvpn-client
+    image: dperson/openvpn-client
     restart: unless-stopped
     volumes:
       - ./vpn:/vpn
