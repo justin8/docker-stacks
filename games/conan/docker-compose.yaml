@@ -20,7 +20,7 @@ services:
         - 7778:7778/udp
         - 27015:27015/udp
     volumes:
-        - ${CONFIG_DIR}/conan:/conanexiles
+        - ${CONFIG_DIR}/games/conan:/conanexiles
 
   redis:
     image: redis:5-alpine
