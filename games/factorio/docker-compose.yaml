@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  factorio:
+    image: factoriotools/factorio
+    restart: always
+    ports:
+      - 34197:34197/udp
+      - 27015:27015/tcp
+    volumes:
+      - ${CONFIG_DIR}/games/factorio:/factorio
+
