@@ -5,7 +5,7 @@ services:
     image: dperson/openvpn-client
     restart: unless-stopped
     volumes:
-      - ./vpn:/vpn
+      - $PWD/vpn:/vpn
     devices:
       - /dev/net/tun
     dns:
