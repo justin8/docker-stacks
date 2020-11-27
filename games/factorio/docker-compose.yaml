@@ -9,4 +9,3 @@ services:
       - 27015:27015/tcp
     volumes:
       - ${CONFIG_DIR}/games/factorio:/factorio
-

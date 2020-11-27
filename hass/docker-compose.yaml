@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:0.115.6
+    image: homeassistant/home-assistant:0.118.2
     restart: always
     network_mode: host # most things with auto-discovery such as homekit require this currently
     volumes:
@@ -12,6 +12,16 @@ services:
       test: "curl -ILXGET http://localhost:8123"
     depends_on:
       - mqtt
+      - home-assistant-database
+  home-assistant-database:
+    image: mysql:8
+    volumes:
+      - ${CONFIG_DIR}/hass-database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${HASS_MYSQL_PASSWORD}
+    ports:
+      - 13306:3306
+
   node-red:
     build: ./node-red
     restart: always
