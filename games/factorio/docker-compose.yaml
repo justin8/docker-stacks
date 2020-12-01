@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   factorio:
-    image: factoriotools/factorio
+    image: factoriotools/factorio:1.0
     restart: always
     ports:
       - 34197:34197/udp
