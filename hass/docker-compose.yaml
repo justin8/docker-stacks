@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:0.118.2
+    image: homeassistant/home-assistant:2020.12.2
     restart: always
     network_mode: host # most things with auto-discovery such as homekit require this currently
     volumes:
