@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  syncthing:
+    image: ghcr.io/linuxserver/syncthing
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${CONFIG_DIR}/syncthing:/config
+      - /home/downloads/Dropbox:/Dropbox
+      - ${STORAGE_DIR}/syncthing:/syncthing
+    ports:
+      - 8384:8384
+      - 22000:22000
+      - 21027:21027/udp
+    restart: unless-stopped
