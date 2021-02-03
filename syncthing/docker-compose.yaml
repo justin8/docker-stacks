@@ -10,8 +10,5 @@ services:
       - ${CONFIG_DIR}/syncthing:/config
       - /home/downloads/Dropbox:/Dropbox
       - ${STORAGE_DIR}/syncthing:/syncthing
-    ports:
-      - 8384:8384
-      - 22000:22000
-      - 21027:21027/udp
+    network_mode: host
     restart: unless-stopped
