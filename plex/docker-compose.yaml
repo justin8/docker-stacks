@@ -14,6 +14,8 @@ services:
     environment:
       - "PGID=${PGID}"
       - "PUID=${PUID}"
+    labels:
+      - autoheal=true
     volumes:
       - ${CONFIG_DIR}/plex:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}

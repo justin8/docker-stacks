@@ -11,6 +11,8 @@ services:
       - "4242:4242"
     healthcheck:
       test: "nc -z localhost:8086"
+    labels:
+      - autoheal=true
 
   grafana:
     image: grafana/grafana:6.2.5
@@ -19,6 +21,7 @@ services:
     healthcheck:
       test: "curl -ILXGET localhost:3000"
     labels:
+      - autoheal=true
       - traefik.enable=true
       - traefik.port=3000
       - traefik.frontend.rule=Host:grafana.${DOMAIN}

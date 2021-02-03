@@ -9,6 +9,8 @@ services:
       - apparmor=unconfined
     healthcheck:
       test: "curl -ILX GET localhost:19999"
+    labels:
+      - autoheal=true
     ports:
       - "19999:19999"
     volumes:

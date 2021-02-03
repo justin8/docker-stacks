@@ -13,6 +13,8 @@ services:
     depends_on:
       - mqtt
       - home-assistant-database
+    labels:
+      - autoheal=true
   home-assistant-database:
     image: mysql:8
     volumes:
@@ -21,6 +23,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${HASS_MYSQL_PASSWORD}
     ports:
       - 13306:3306
+    labels:
+      - autoheal=true
 
   node-red:
     build: ./node-red
@@ -36,6 +40,7 @@ services:
       - traefik.enable=true
       - traefik.port=1880
       - traefik.frontend.rule=Host:node-red.${DOMAIN}
+      - autoheal=true
   mqtt:
     image: eclipse-mosquitto
     restart: always
@@ -49,6 +54,8 @@ services:
   zigbee2mqtt:
     image: koenkk/zigbee2mqtt
     restart: always
+    labels:
+      - autoheal=true
     volumes:
       - ${CONFIG_DIR}/zigbee2mqtt:/app/data
     devices:
