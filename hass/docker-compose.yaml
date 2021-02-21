@@ -42,7 +42,7 @@ services:
       - traefik.frontend.rule=Host:node-red.${DOMAIN}
       - autoheal=true
   mqtt:
-    image: eclipse-mosquitto
+    image: eclipse-mosquitto:1.6
     restart: always
     ports:
       - 1883:1883
@@ -50,7 +50,7 @@ services:
     volumes:
       - ${CONFIG_DIR}/mosquitto:/mosquitto
     healthcheck:
-      test: "nc -z localhost 1883"
+      test: "mosquitto_pub -u test_user -P $MQTT_TEST_USER_PASSWORD -t test_topic -m test-message"
   zigbee2mqtt:
     image: koenkk/zigbee2mqtt
     restart: always
