@@ -3,12 +3,11 @@
 This is a repo full of docker stack configurations for various services. The majority route traffic using traefik.
 
 ## Requirements:
-* docker
+- docker
+- docker-compose
 
 ## Usage
 
-To install/update a service:
+Every service/group of services is in it's own docker-compose stack. With docker allowing for restart:always tasks to continue to run post-reboot you can just do a `docker-compose up -d` to bring a service online.
 
-1. Copy `env.example` to `.env` in the root of the repository
-2. Ensure the director specified as the `CONFIG_DIR` exists
-3. Read the README file in each subdir for specific configuration settings that may be required
+Data for services is in subfolders of themselves and added to a local `.gitignore`

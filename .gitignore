@@ -16,7 +16,5 @@ tags
 
 ### Repo specific ###
 /.env
-netdata/netdata.conf
-grafana/grafana.conf
-traefik/traefik.toml
-mediaserver/vpn
+.snapshots
+.snapraid*
