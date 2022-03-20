@@ -4,7 +4,7 @@ services:
   sonarr:
     image: linuxserver/sonarr
     volumes:
-      - ./config/sonarr:/config
+      - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}
     environment:
       - TZ=${TZ}

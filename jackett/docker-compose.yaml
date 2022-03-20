@@ -4,7 +4,7 @@ services:
   jackett:
     image: linuxserver/jackett
     volumes:
-      - ./config/jackett:/config
+      - ./config:/config
     environment:
       - TZ=${TZ}
       - PGID=${PGID}
