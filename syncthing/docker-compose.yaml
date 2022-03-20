@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  syncthing:
+    image: ghcr.io/linuxserver/syncthing
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    # labels:
+    #   - autoheal=true
+    # healthcheck:
+    #   test: "apk add -U curl && curl -s localhost:8384|grep 'Not Authorized'"
