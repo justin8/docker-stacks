@@ -2,7 +2,8 @@ version: "3.7"
 
 services:
   transmission:
-    image: linuxserver/transmission
+    image: ghcr.io/linuxserver/transmission
+    restart: unless-stopped
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}

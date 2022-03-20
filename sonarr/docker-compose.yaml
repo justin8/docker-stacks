@@ -2,7 +2,8 @@ version: "3.7"
 
 services:
   sonarr:
-    image: linuxserver/sonarr
+    image: ghcr.io/linuxserver/sonarr
+    restart: unless-stopped
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}

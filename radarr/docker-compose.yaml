@@ -2,7 +2,8 @@ version: "3.7"
 
 services:
   radarr:
-    image: linuxserver/radarr
+    image: ghcr.io/linuxserver/radarr
+    restart: unless-stopped
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}

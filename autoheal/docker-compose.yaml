@@ -3,6 +3,6 @@ version: "3.7"
 services:
   autoheal:
     image: willfarrell/autoheal
-    restart: always
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
