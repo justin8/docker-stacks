@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  jackett:
+    image: ghcr.io/linuxserver/plex
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PGID=${PGID}
+      - PUID=${PUID}
+    labels:
+      - autoheal=true
+    healthcheck:
+      test: "curl -IXGET http://localhost:32400/web"
+
+networks:
+  default:
+    external:
+      name: traefik
