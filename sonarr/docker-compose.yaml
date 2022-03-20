@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  sonarr:
+    image: linuxserver/sonarr
+    volumes:
+      - ./config/sonarr:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
+      - "traefik.http.routers.sonarr.tls.certresolver=myresolver"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:8989"
+
+networks:
+  default:
+    external:
+      name: traefik

@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  radarr:
+    image: linuxserver/radarr
+    volumes:
+      - ./config/radarr:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PGID=${PGID}
+      - PUID=${PUID}
+    labels:
+      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
+      - "traefik.http.routers.radarr.tls.certresolver=myresolver"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:7878"
+
+networks:
+  default:
+    external:
+      name: traefik
