@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  transmission:
+    image: linuxserver/transmission
+    volumes:
+      - ./config:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
+      - "traefik.http.routers.transmission.tls.certresolver=myresolver"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:9091"
+
+networks:
+  default:
+    external:
+      name: traefik
