@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  jackett:
+  plex:
     image: ghcr.io/linuxserver/plex
     restart: unless-stopped
     network_mode: host
@@ -16,8 +16,4 @@ services:
       - autoheal=true
     healthcheck:
       test: "curl -IXGET http://localhost:32400/web"
-
-networks:
-  default:
-    external:
-      name: traefik
+      
