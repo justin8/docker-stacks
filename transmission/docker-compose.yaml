@@ -12,6 +12,8 @@ services:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
+      - USER=${MEDIA_USER}
+      - PASS=${MEDIA_PASSWORD}
     labels:
       - autoheal=true
       - "traefik.enable=true"

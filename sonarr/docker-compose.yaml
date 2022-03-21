@@ -13,7 +13,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
     labels:
-      - autoheal=true
+      - "autoheal=true"
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
       - "traefik.http.routers.sonarr.tls.certresolver=myresolver"
