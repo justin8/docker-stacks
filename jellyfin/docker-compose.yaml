@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  jellyfin:
+    image: ghcr.io/linuxserver/jellyfin
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    devices:
+      - /dev/dri:/dev/dri
+    environment:
+      - TZ=${TZ}
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - JELLYFIN_PublishedServerUrl=192.168.4.20 # Used for autodiscovery only
+    labels:
+      - autoheal=true
+    ports:
+      - 8096:8096 # WebUI
+      - 7359:7359/udp # Local Discovery
+      - 1900:1900/udp # DNLA Discovery
+    # healthcheck:
+    #   test: "curl -IXGET http://localhost:32400/web"
+      
