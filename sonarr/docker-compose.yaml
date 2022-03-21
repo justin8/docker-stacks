@@ -3,6 +3,7 @@ version: "3.7"
 services:
   sonarr:
     image: ghcr.io/linuxserver/sonarr
+    container_name: "sonarr"
     restart: unless-stopped
     volumes:
       - ./config:/config

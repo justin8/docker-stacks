@@ -3,6 +3,7 @@ version: "3.7"
 services:
   transmission:
     image: ghcr.io/linuxserver/transmission
+    container_name: transmission
     restart: unless-stopped
     volumes:
       - ./config:/config

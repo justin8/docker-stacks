@@ -3,6 +3,7 @@ version: "3.7"
 services:
   jackett:
     image: ghcr.io/linuxserver/jackett
+    container_name: jackett
     restart: unless-stopped
     volumes:
       - ./config:/config

@@ -3,6 +3,7 @@ version: "3.7"
 services:
   syncthing:
     image: ghcr.io/linuxserver/syncthing
+    container_name: syncthing
     restart: unless-stopped
     network_mode: host
     volumes:

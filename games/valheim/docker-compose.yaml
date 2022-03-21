@@ -3,6 +3,7 @@ version: "3.7"
 services:
   valheim:
     image: lloesche/valheim-server
+    container_name: valheim
     network_mode: host
     restart: unless-stopped
     environment:
@@ -11,7 +12,7 @@ services:
       - PGID=${PGID}
       - SERVER_NAME=Justin
       - WORLD_NAME=Justin
-      - SERVER_PASS="${GAME_SERVER_PASSWORD}"
+      - SERVER_PASS=${GAME_SERVER_PASSWORD}
       - VALHEIM_PLUS=true
     volumes:
       - ./config:/config
