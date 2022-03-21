@@ -1,0 +1,82 @@
+version: "3.7"
+
+services:
+  home-assistant:
+    image: homeassistant/home-assistant:2021.10
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config/home-assistant:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - autoheal=true
+    healthcheck:
+      test: "curl -ILXGET http://localhost:8123"
+
+  database:
+    image: mysql:8
+    restart: unless-stopped
+    # labels:
+    #   - autoheal=true
+    volumes:
+      - ./config/database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${HASS_MYSQL_PASSWORD}
+    ports:
+      - 13306:3306
+
+  node-red:
+    build: ./node-red
+    restart: unless-stopped
+    user: ${PUID}
+    volumes:
+      - ./config/node-red:/data
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: "curl -ILXGET http://localhost:1880"
+    depends_on:
+      - home-assistant
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.node-red.rule=Host(`node-red.${DOMAIN}`)"
+      - "traefik.http.routers.node-red.tls.certresolver=myresolver"
+      - "autoheal=true"
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    labels:
+      - autoheal=true
+    ports:
+      - 1883:1883
+    volumes:
+      - ./config/mosquitto:/mosquitto
+    environment:
+      - MQTT_TEST_USER_NAME=$MQTT_TEST_USER_NAME
+      - MQTT_TEST_USER_PASSWORD=$MQTT_TEST_USER_PASSWORD
+    healthcheck:
+      test: "mosquitto_pub -u $MQTT_TEST_USER_NAME -P $MQTT_TEST_USER_PASSWORD -t test_topic -m test-message"
+
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    labels:
+      - autoheal=true
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./config/zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    depends_on:
+      - mqtt
+
+networks:
+  default:
+    external:
+      name: traefik

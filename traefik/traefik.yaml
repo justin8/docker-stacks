@@ -21,7 +21,7 @@ certificatesResolvers:
       #email: xxx
       storage: /letsencrypt/acme.json
       tlschallenge: true
-      caserver: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      #caserver: "https://acme-staging-v02.api.letsencrypt.org/directory"
       httpChallenge:
         entryPoint: web
 
