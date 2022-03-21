@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  valheim:
+    image: lloesche/valheim-server
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - SERVER_NAME=Justin
+      - WORLD_NAME=Justin
+      - SERVER_PASS="${GAME_SERVER_PASSWORD}"
+      - VALHEIM_PLUS=true
+    volumes:
+      - ./config:/config
+      - ./data:/opt/valheim
+

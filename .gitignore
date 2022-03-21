@@ -18,4 +18,5 @@ tags
 /.env
 .snapshots
 .snapraid*
-*/config
+**/config
+**/data
