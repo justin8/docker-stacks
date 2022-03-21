@@ -1,0 +1,13 @@
+http:
+  routers:
+    service-foo:
+      rule: "Host(`foo.dray.id.au`)"
+      service: "service-foo"
+      tls:
+        certresolver: "myresolver"
+
+  services:
+    service-foo:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.4.20:8000"

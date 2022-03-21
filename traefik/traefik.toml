@@ -10,6 +10,8 @@
 [log]
 level = "DEBUG"
 
+[accessLog]
+
 ################################################################
 # Entrypoints configuration
 ################################################################
@@ -50,10 +52,13 @@ level = "DEBUG"
 ################################################################
 
 # Enable Docker configuration backend
-[providers.docker]
-  exposedbydefault = false
+#[providers.docker]
+#  exposedbydefault = false
 
 
 ################################################################
 # Static endpoints
 ################################################################
+
+[providers.file]
+    filename = "/etc/traefik/traefik-dynamic.yaml"
