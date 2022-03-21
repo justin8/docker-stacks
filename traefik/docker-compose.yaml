@@ -16,7 +16,7 @@ services:
       - "8080:8080"
     volumes:
       - "./config/letsencrypt:/letsencrypt"
-      - "./traefik.toml:/etc/traefik/traefik.toml"
+      - "./traefik.yaml:/etc/traefik/traefik.yaml"
       - "./traefik-dynamic.yaml:/etc/traefik/traefik-dynamic.yaml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 

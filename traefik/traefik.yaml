@@ -1,0 +1,35 @@
+log:
+  level: DEBUG
+
+accessLog: {}
+
+entryPoints:
+  web:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: :443
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      #email: xxx
+      storage: /letsencrypt/acme.json
+      tlschallenge: true
+      caserver: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+
+api:
+  insecure: true
+
+providers:
+  docker:
+    exposedByDefault: false
+  file:
+    filename: "/etc/traefik/traefik-dynamic.yaml"
