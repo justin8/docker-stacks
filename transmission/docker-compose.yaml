@@ -19,6 +19,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
       - "traefik.http.routers.transmission.tls.certresolver=myresolver"
+    ports:
+      - "13100:13100"
     healthcheck:
       test: "curl -ILXGET http://localhost:9091"
 
