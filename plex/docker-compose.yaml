@@ -3,11 +3,14 @@ version: "3.7"
 services:
   plex:
     image: ghcr.io/linuxserver/plex
+    container_name: plex
     restart: unless-stopped
     network_mode: host
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}
+    devices:
+      - /dev/dri:/dev/dri
     environment:
       - TZ=${TZ}
       - PGID=${PGID}
