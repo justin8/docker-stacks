@@ -1,0 +1,27 @@
+version: "3.7"
+
+# 1Writer can use webdav, so using this to sync it in to the notes that I otherwise use syncthing for
+
+services:
+  webdav:
+    build: ./webdav
+    restart: unless-stopped
+    volumes:
+      - "${STORAGE_DIR}/syncthing/Obsidian-vault:/data"
+    environment:
+      - USERNAME=${WEBDAV_USER}
+      - PASSWORD=${WEBDAV_PASSWORD}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.webdav.rule=Host(`webdav.${DOMAIN}`)"
+      - "traefik.http.routers.webdav.tls.certresolver=myresolver"
+    # healthcheck:
+    #   test: "curl -ILXGET http://localhost:8096/web"
+
+networks:
+  default:
+    external:
+      name: traefik
