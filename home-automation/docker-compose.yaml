@@ -2,12 +2,14 @@ version: "3.7"
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:2021.10
+    image: homeassistant/home-assistant:2022.5
     restart: unless-stopped
     network_mode: host
+    privileged: true
     volumes:
       - ./config/home-assistant:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
