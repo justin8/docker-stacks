@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  factorio:
+    image: factoriotools/factorio:1.1.57
+    restart: unless-stopped
+    ports:
+      - 34197:34197/udp
+      - 27015:27015/tcp
+    volumes:
+      - ./config:/factorio
