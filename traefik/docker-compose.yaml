@@ -13,7 +13,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+      #- "8080:8080" # Dashboard port
     volumes:
       - "./config/letsencrypt:/letsencrypt"
       - "./traefik.yaml:/etc/traefik/traefik.yaml"

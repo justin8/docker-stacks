@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  komga:
+    image: gotson/komga
+    container_name: "komga"
+    restart: unless-stopped
+    volumes:
+      - ./config:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    user: ${PUID}:${PGID}
+    labels:
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.manga.rule=Host(`manga.${DOMAIN}`)"
+      - "traefik.http.routers.manga.tls.certresolver=myresolver"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:8080"
+
+networks:
+  default:
+    external:
+      name: traefik
