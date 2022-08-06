@@ -37,6 +37,7 @@ services:
     user: ${PUID}
     volumes:
       - ./config/node-red:/data
+      - ./config/shared:/shared
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: "curl -ILXGET http://localhost:1880"
@@ -72,11 +73,14 @@ services:
       - TZ=${TZ}
     volumes:
       - ./config/zigbee2mqtt:/app/data
+      - ./config/shared:/shared
       - /run/udev:/run/udev:ro
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     depends_on:
       - mqtt
+    healthcheck:
+      test: "grep -q reset /shared/reset-zigbee" # This is inverted; "unavailable" is the state we want to reset on.
 
 networks:
   default:
