@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  the-forest:
+    image: jammsen/the-forest-dedicated-server:latest
+    container_name: the-forest
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - TIMEZONE=${TZ}
+      - SERVER_STEAM_ACCOUNT_TOKEN=${THE_FOREST_ACCOUNT_TOKEN}
+    volumes:
+      - ./steamcmd:/steamcmd
+      - ./game:/theforest
+      - ./winedata:/winedata
