@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+  ce0:
+    image: alinmear/docker-conanexiles:latest
+    depends_on:
+      - redis
+    restart: unless-stopped
+    environment:
+      - "CONANEXILES_ServerSettings_ServerSettings_AdminPassword=$CONAN_ADMIN_PASSWORD"
+      - "CONANEXILES_Engine_OnlineSubSystemSteam_ServerName=Justins Server"
+      - "CONANEXILES_Engine_OnlineSubSystemSteam_ServerPassword=${CONAN_SERVER_PASSWORD}"
+      - "CONANEXILES_INSTANCENAME=exiles0"
+      - "CONANEXILES_Game_RconPlugin_RconEnabled=1"
+      - "CONANEXILES_Game_RconPlugin_RconPassword=REDACTED"
+      - "CONANEXILES_Game_RconPlugin_RconPort=25575"
+      - "CONANEXILES_Game_RconPlugin_RconMaxKarma=60"
+    ports:
+        - 7777:7777/udp
+        - 7778:7778/udp
+        - 27015:27015/udp
+    volumes:
+        - ./config:/conanexiles
+
+  redis:
+    image: redis:5-alpine
+    restart: unless-stopped
+    environment:
+      - "TZ=Australia/Brisbane"
+    volumes:
+      - redis:/data/
+
+volumes:
+    redis:
