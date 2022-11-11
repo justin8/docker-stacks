@@ -41,6 +41,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: "curl -ILXGET http://localhost:1880"
+    ports:
+      - "1880:1880"
     depends_on:
       - home-assistant
     labels:
@@ -80,7 +82,7 @@ services:
     depends_on:
       - mqtt
     healthcheck:
-      test: "grep -q reset /shared/reset-zigbee" # This is inverted; "unavailable" is the state we want to reset on.
+      test: "/bin/grep -q ok /shared/reset-zigbee" # Reset when the message is anything other than "ok"
 
 networks:
   default:
