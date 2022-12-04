@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   valheim:
-    image: lloesche/valheim-server
+    image: ghcr.io/lloesche/valheim-server
     container_name: valheim
     network_mode: host
     restart: unless-stopped
@@ -14,6 +14,7 @@ services:
       - WORLD_NAME=Justin
       - SERVER_PASS=${GAME_SERVER_PASSWORD}
       - VALHEIM_PLUS=true
+      - STEAMCMD_ARGS="-validate -beta public-test -betapassword yesimadebackups"
     volumes:
       - ./config:/config
       - ./data:/opt/valheim
