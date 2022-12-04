@@ -68,7 +68,7 @@ services:
 
   zigbee2mqtt:
     image: koenkk/zigbee2mqtt
-    restart: unless-stopped
+    restart: always
     labels:
       - autoheal=true
     environment:
