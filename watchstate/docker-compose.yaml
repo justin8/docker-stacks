@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  watchstate:
+    image: ghcr.io/arabcoders/watchstate:latest
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    volumes:
+      - ./config:/config
+    environment:
+      - WS_TZ=${TZ}
+    labels:
+      - autoheal=true
+    ports:
+      - 8079:8080 # webhook listener port
+      #    healthcheck:
+      #      test: "curl -ILXGET http://localhost:8096/web"
+
