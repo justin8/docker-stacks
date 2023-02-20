@@ -9,6 +9,12 @@ services:
       - ./config:/config
     environment:
       - WS_TZ=${TZ}
+      - WS_CRON_IMPORT=1
+      - WS_CRON_IMPORT_AT="*/1 * * * *"
+      - WS_CRON_EXPORT=1
+      - WS_CRON_EXPORT_AT="30 */1 * * *"
+      - WS_CRON_BACKUP=1
+      - WS_CRON_BACKUP_AT="0 1 * * *"
     labels:
       - autoheal=true
     ports:
@@ -16,3 +22,7 @@ services:
       #    healthcheck:
       #      test: "curl -ILXGET http://localhost:8096/web"
 
+networks:
+  default:
+    external:
+      name: traefik
