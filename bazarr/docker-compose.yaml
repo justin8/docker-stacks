@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    container_name: "bazarr"
+    restart: unless-stopped
+    volumes:
+      - ./config:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)"
+      - "traefik.http.routers.bazarr.tls.certresolver=myresolver"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:6767"
+
+networks:
+  default:
+    external:
+      name: traefik
