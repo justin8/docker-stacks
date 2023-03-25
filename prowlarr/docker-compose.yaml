@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  prowlarr:
+    image: ghcr.io/linuxserver/prowlarr
+    container_name: "prowlarr"
+    restart: unless-stopped
+    volumes:
+      - ./config:/config
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
+      - "traefik.http.routers.prowlarr.tls.certresolver=myresolver"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:9696"
+
+networks:
+  default:
+    external:
+      name: traefik
