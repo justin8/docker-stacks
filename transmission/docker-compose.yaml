@@ -5,6 +5,9 @@ services:
     image: ghcr.io/linuxserver/transmission
     container_name: transmission
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "500M"
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}

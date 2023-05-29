@@ -3,9 +3,12 @@ version: "3.3"
 services:
 
   traefik:
-    image: "traefik:v2.6"
+    image: "traefik:v2.10"
     restart: unless-stopped
     container_name: "traefik"
+    logging:
+      options:
+        max-size: "500M"
     networks:
       - traefik
     command:
