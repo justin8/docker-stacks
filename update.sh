@@ -16,5 +16,6 @@ docker-compose pull
 docker-compose build
 
 if [[ -z $no_restart ]]; then
-	docker-compose restart
+	docker-compose down
+	docker-compose up -d
 fi
