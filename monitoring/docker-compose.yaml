@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    logging:
+      options:
+        max-size: "500M"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus:/prometheus
+    labels:
+      - autoheal=true
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:9090"
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    logging:
+      options:
+        max-size: "500M"
+    volumes:
+      - ./config/grafana:/var/lib/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini
+    env_file: .env
+    labels:
+      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
+      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+#    healthcheck:
+#      test: "curl -ILXGET http://localhost:3000"
+
+networks:
+  default:
+    external:
+      name: traefik
