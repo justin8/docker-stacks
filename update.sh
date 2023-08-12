@@ -8,6 +8,7 @@ no_restart="$2"
 
 if [[ -z $app ]]; then
 	echo "You must provide the name of an app to update"
+	exit 1
 fi
 
 cd "$(readlink -f "$(dirname "$0")")/$app"
