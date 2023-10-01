@@ -5,15 +5,27 @@ services:
     image: ghcr.io/linuxserver/syncthing
     container_name: syncthing
     restart: unless-stopped
-    network_mode: host
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}
+    ports:
+      - "22000:22000"
+      - "22000:22000/udp"
+      - "21027:21027/udp"
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
-    # labels:
-    #   - autoheal=true
-    # healthcheck:
-    #   test: "apk add -U curl && curl -s localhost:8384|grep 'Not Authorized'"
+    labels:
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)"
+      - "traefik.http.routers.syncthing.tls.certresolver=myresolver"
+      - "traefik.http.routers.syncthing.middlewares=authentik@docker"
+    healthcheck:
+      test: "apk add -U curl && curl -sILX GET localhost:8384"
+
+networks:
+  default:
+    external:
+      name: traefik

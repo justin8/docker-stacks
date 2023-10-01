@@ -15,8 +15,13 @@ services:
     labels:
       - "autoheal=true"
       - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.priority=1"
       - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
       - "traefik.http.routers.sonarr.tls.certresolver=myresolver"
+      - "traefik.http.routers.sonarr.middlewares=authentik@docker"
+      - "traefik.http.routers.sonarr-api.priority=2"
+      - "traefik.http.routers.sonarr-api.rule=Host(`sonarr.${DOMAIN}`) && PathPrefix(`/api/`)"
+      - "traefik.http.routers.sonarr-api.tls.certresolver=myresolver"
     healthcheck:
       test: "curl -ILXGET http://localhost:8989"
 
