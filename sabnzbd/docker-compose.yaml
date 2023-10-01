@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  sabnzbd:
+    image: ghcr.io/linuxserver/sabnzbd
+    container_name: "sabnzbd"
+    restart: unless-stopped
+    volumes:
+      - ./config:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)"
+      - "traefik.http.routers.sabnzbd.tls.certresolver=myresolver"
+    #healthcheck:
+      #test: "curl -ILXGET http://localhost:8080"
+
+networks:
+  default:
+    external:
+      name: traefik
