@@ -15,7 +15,7 @@ services:
       - "traefik.http.routers.manga.rule=Host(`manga.${DOMAIN}`)"
       - "traefik.http.routers.manga.tls.certresolver=myresolver"
     healthcheck:
-      test: "curl -ILXGET http://localhost:8080"
+      test: "curl -ILXGET http://localhost:25600"
 
 networks:
   default:
