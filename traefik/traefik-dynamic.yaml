@@ -1,5 +1,13 @@
 http:
   routers:
+    dashboard:
+      rule: Host(`traefik.dray.id.au`)
+      service: api@internal
+      middlewares:
+        - authentik@docker
+      tls:
+        certresolver: myresolver
+
     service-home-assistant:
       rule: "Host(`home-assistant.dray.id.au`)"
       service: "service-home-assistant"
