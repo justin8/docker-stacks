@@ -48,18 +48,22 @@ services:
     volumes:
       - ./data/media:/media
       - ./data/custom-templates:/templates
+    ports:
+      - "9000:9000"
     env_file:
       - .env
     depends_on:
       - authentik-postgresql
       - authentik-redis
+    healthcheck:
+      test: 'python -c "import requests; response = requests.get(''http://localhost:9000/-/health/live/''); exit(1) if response.status_code != 204 else exit(0)"'
     labels:
       - autoheal=true
       - "traefik.enable=true"
       ## HTTP Routers
       - "traefik.http.routers.authentik.rule=Host(`auth.${DOMAIN}`)"
       - "traefik.http.routers.authentik.tls.certresolver=myresolver"
-      ## Individual Application forwardAuth regex (catch any subdomain using individual application forwardAuth)  
+      ## Individual Application forwardAuth regex (catch any subdomain using individual application forwardAuth)
       - "traefik.http.routers.authentik-outpost.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.$DOMAIN`) && PathPrefix(`/outpost.goauthentik.io/`)"
       - "traefik.http.routers.authentik-outpost.tls.certresolver=myresolver"
       ## Forward Auth Outpost Config
@@ -95,7 +99,6 @@ services:
       - authentik-redis
     labels:
       - autoheal=true
-
 
   # # Example endpoint behind Authentik auth
   # whoami-test:
