@@ -2,9 +2,8 @@ version: "3.7"
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:2022.5
+    image: homeassistant/home-assistant:2023.9
     restart: unless-stopped
-    network_mode: host
     privileged: true
     volumes:
       - ./config/home-assistant:/config
@@ -14,12 +13,26 @@ services:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
+    ports:
+      - 8123:8123
     labels:
-      - autoheal=true
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.home-assistant.priority=1"
+      - "traefik.http.routers.home-assistant.rule=Host(`home-assistant.${DOMAIN}`)"
+      - "traefik.http.routers.home-assistant.tls.certresolver=myresolver"
+      - "traefik.http.routers.home-assistant.middlewares=authentik@docker"
+      - "traefik.http.routers.home-assistant-api.priority=2"
+      - "traefik.http.routers.home-assistant-api.rule=Host(`home-assistant.${DOMAIN}`) && PathPrefix(`/api/`)"
+      - "traefik.http.routers.home-assistant-api.tls.certresolver=myresolver"
+      # No-authentik endpoint (Allows login directly without the auth redirect)
+      # - "traefik.http.middlewares.home-assistant-na.headers.customrequestheaders.X-authentik-username=" # Remove auth'd username header to prevent bypass
+      # - "traefik.http.routers.home-assistant-na.rule=Host(`home-assistant-na.${DOMAIN}`)"
+      # - "traefik.http.routers.home-assistant-na.tls.certresolver=myresolver"
     healthcheck:
       test: "curl -ILXGET http://localhost:8123"
 
-  database:
+  home-assistant-database:
     image: mysql:8
     restart: unless-stopped
     # labels:
@@ -28,8 +41,8 @@ services:
       - ./config/database:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${HASS_MYSQL_PASSWORD}
-    ports:
-      - 13306:3306
+    # ports:
+    #   - 13306:3306
 
   node-red:
     build: ./node-red

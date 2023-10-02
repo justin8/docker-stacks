@@ -1,4 +1,4 @@
-FROM nodered/node-red:3.0.2
+FROM nodered/node-red:3.1
 RUN npm install node-red-contrib-home-assistant-websocket
 RUN npm install node-red-contrib-time-range-switch
 RUN npm install node-red-contrib-traffic
