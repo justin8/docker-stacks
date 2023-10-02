@@ -26,6 +26,7 @@ certificatesResolvers:
         entryPoint: web
 
 api:
+  insecure: true
   dashboard: true
 
 providers:
