@@ -21,7 +21,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)"
       - "traefik.http.routers.syncthing.tls.certresolver=myresolver"
-      - "traefik.http.routers.syncthing.middlewares=authentik@docker"
+      - "traefik.http.routers.syncthing.middlewares=authentik@file"
     healthcheck:
       test: "apk add -U curl && curl -sILX GET localhost:8384"
 

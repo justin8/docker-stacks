@@ -16,7 +16,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
       - "traefik.http.routers.prowlarr.tls.certresolver=myresolver"
-      - "traefik.http.routers.prowlarr.middlewares=authentik@docker"
+      - "traefik.http.routers.prowlarr.middlewares=authentik@file"
     healthcheck:
       test: "curl -ILXGET http://localhost:9696"
 
