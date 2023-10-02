@@ -18,7 +18,7 @@ services:
       - "traefik.http.routers.sabnzbd.priority=1"
       - "traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)"
       - "traefik.http.routers.sabnzbd.tls.certresolver=myresolver"
-      - "traefik.http.routers.sabnzbd.middlewares=authentik@docker"
+      - "traefik.http.routers.sabnzbd.middlewares=authentik@file"
       - "traefik.http.routers.sabnzbd-api.priority=2"
       - "traefik.http.routers.sabnzbd-api.rule=Host(`sabnzbd.${DOMAIN}`) && PathPrefix(`/sabnzbd/api/`)"
       - "traefik.http.routers.sabnzbd-api.tls.certresolver=myresolver"

@@ -21,7 +21,7 @@ services:
       - "traefik.http.routers.home-assistant.priority=1"
       - "traefik.http.routers.home-assistant.rule=Host(`home-assistant.${DOMAIN}`)"
       - "traefik.http.routers.home-assistant.tls.certresolver=myresolver"
-      - "traefik.http.routers.home-assistant.middlewares=authentik@docker"
+      - "traefik.http.routers.home-assistant.middlewares=authentik@file"
       - "traefik.http.routers.home-assistant-api.priority=2"
       - "traefik.http.routers.home-assistant-api.rule=Host(`home-assistant.${DOMAIN}`) && PathPrefix(`/api/`)"
       - "traefik.http.routers.home-assistant-api.tls.certresolver=myresolver"
@@ -62,6 +62,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.node-red.rule=Host(`node-red.${DOMAIN}`)"
       - "traefik.http.routers.node-red.tls.certresolver=myresolver"
+      - "traefik.http.routers.node-red.middlewares=authentik@file"
       - "autoheal=true"
 
   mqtt:
