@@ -14,7 +14,8 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
     ports:
-      - 8123:8123
+      - 8123:8123 # Main service port
+      - 21063:21063 # Homekit bridge
     labels:
       - "autoheal=true"
       - "traefik.enable=true"
