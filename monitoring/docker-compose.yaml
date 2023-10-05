@@ -13,11 +13,21 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./config/prometheus:/prometheus
     labels:
-      - autoheal=true
-    ports:
-      - "9090:9090"
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.${DOMAIN}`)"
+      - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
+      - "traefik.http.routers.prometheus.middlewares=authentik@file"
+#    ports:
+#      - "9090:9090"
     healthcheck:
-        test: "wget http://localhost:9090 -O /dev/null"
+      test: "wget http://localhost:9090 -O /dev/null"
+  prometheus-container-updater:
+    build: prometheus-container-updater
+    restart: unless-stopped
+    volumes:
+      - ./config/prometheus:/prometheus
+      - /var/run/docker.sock:/var/run/docker.sock
   grafana:
     image: grafana/grafana-oss
     container_name: grafana
@@ -31,7 +41,7 @@ services:
       - ./grafana.ini:/etc/grafana/grafana.ini
     env_file: .env
     labels:
-      - autoheal=true
+      - "autoheal=true"
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
