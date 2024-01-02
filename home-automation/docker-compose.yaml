@@ -82,10 +82,16 @@ services:
       test: "mosquitto_pub -u $MQTT_TEST_USER_NAME -P $MQTT_TEST_USER_PASSWORD -t test_topic -m test-message"
 
   zigbee2mqtt:
-    image: koenkk/zigbee2mqtt
+    build: ./zigbee2mqtt
     restart: always
+    ports:
+      - 8080
     labels:
-      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.${DOMAIN}`)"
+      - "traefik.http.routers.zigbee2mqtt.tls.certresolver=myresolver"
+      - "traefik.http.routers.zigbee2mqtt.middlewares=authentik@file"
+      - "autoheal=true"
     environment:
       - TZ=${TZ}
     volumes:
