@@ -19,7 +19,7 @@ services:
       - ALWAYS_UPDATE_ON_START=true
       - MAX_PLAYERS=32
       - MULTITHREAD_ENABLED=true
-      - COMMUNITY_SERVER=false
+      - COMMUNITY_SERVER=true
       - RCON_ENABLED=true
       - RCON_PORT=25575
       - SERVER_NAME=justins-palworld-###RANDOM###
