@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:2023.9
+    image: homeassistant/home-assistant:2024.1
     restart: unless-stopped
     privileged: true
     volumes:
