@@ -14,7 +14,7 @@ fi
 cd "$(readlink -f "$(dirname "$0")")/$app"
 
 docker-compose pull
-docker-compose build
+docker-compose build --pull
 
 if [[ -z $no_restart ]]; then
 	docker-compose down
