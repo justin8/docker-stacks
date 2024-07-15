@@ -1,8 +1,6 @@
-version: "3.7"
-
 services:
   home-assistant:
-    image: homeassistant/home-assistant:2024.1
+    image: homeassistant/home-assistant:2024.7
     restart: unless-stopped
     privileged: true
     volumes:
@@ -66,6 +64,20 @@ services:
       - "traefik.http.routers.node-red.middlewares=authentik@file"
       - "autoheal=true"
 
+  sungather:
+    image: bohdans/sungather
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "500M"
+    volumes:
+      - ./config/sungather/config.yaml:/config/config.yaml
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+    labels:
+      - autoheal=true
+
   mqtt:
     image: eclipse-mosquitto:2
     restart: unless-stopped
@@ -102,8 +114,8 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
     depends_on:
       - mqtt
-    healthcheck:
-      test: "/bin/grep -q ok /shared/reset-zigbee" # Reset when the message is anything other than "ok"
+#    healthcheck:
+#      test: "/bin/grep -q ok /shared/reset-zigbee" # Reset when the message is anything other than "ok"
 
 networks:
   default:
