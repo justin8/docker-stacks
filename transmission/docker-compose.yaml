@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   transmission:
     image: ghcr.io/linuxserver/transmission
@@ -28,5 +26,5 @@ services:
 
 networks:
   default:
-    external:
-      name: traefik
+    external: true
+    name: traefik
