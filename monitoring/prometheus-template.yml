@@ -43,3 +43,8 @@ scrape_configs:
       - targets: ['hestia.local:8123']
     metrics_path: /api/prometheus
     bearer_token: "$HASS_PROMETHEUS_API_KEY"
+
+  - job_name: "openwrt"
+    scrape_interval: 60s
+    static_configs:
+      - targets: ["192.168.4.1:9100"]
