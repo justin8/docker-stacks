@@ -43,27 +43,6 @@ services:
     # ports:
     #   - 13306:3306
 
-  node-red:
-    build: ./node-red
-    restart: unless-stopped
-    user: ${PUID}
-    volumes:
-      - ./config/node-red:/data
-      - ./config/shared:/shared
-      - /etc/localtime:/etc/localtime:ro
-    healthcheck:
-      test: "curl -ILXGET http://localhost:1880"
-    ports:
-      - "1880:1880"
-    depends_on:
-      - home-assistant
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.node-red.rule=Host(`node-red.${DOMAIN}`)"
-      - "traefik.http.routers.node-red.tls.certresolver=myresolver"
-      - "traefik.http.routers.node-red.middlewares=authentik@file"
-      - "autoheal=true"
-
   sungather:
     image: bohdans/sungather
     restart: unless-stopped
