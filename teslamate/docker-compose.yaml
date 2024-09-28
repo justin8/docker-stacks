@@ -1,0 +1,68 @@
+services:
+  teslamate:
+    image: teslamate/teslamate:latest
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - 4000:4000 # Main service port
+    environment:
+      - ENCRYPTION_KEY=${TESLAMATE_ENCRYPTION_KEY}
+      - DATABASE_USER=${TESLAMATE_DATABASE_USER}
+      - DATABASE_PASS=${TESLAMATE_DATABASE_PASS}
+      - DATABASE_NAME=teslamate
+      - DATABASE_HOST=teslamate-database
+      - MQTT_HOST=mqtt.dray.id.au
+      - MQTT_USERNAME=${TESLAMATE_MQTT_USER}
+      - MQTT_PASSWORD=${TESLAMATE_MQTT_PASS}
+      - TZ=${TZ}
+    labels:
+      - "autoheal=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.teslamate.rule=Host(`teslamate.${DOMAIN}`)"
+      - "traefik.http.routers.teslamate.tls.certresolver=myresolver"
+      - "traefik.http.routers.teslamate.middlewares=authentik@file"
+    # healthcheck:
+    #   test: "curl -ILXGET http://localhost:8123"
+    cap_drop:
+      - all
+
+  teslamate-database:
+    image: postgres:15
+    restart: unless-stopped
+    # labels:
+    #   - autoheal=true
+    volumes:
+      - ./config/database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${TESLAMATE_DATABASE_USER}
+      - POSTGRES_PASSWORD=${TESLAMATE_DATABASE_PASS}
+      - POSTGRES_DB=teslamate
+    # ports:
+    #   - 13306:3306
+
+  teslamate-grafana:
+    image: teslamate/grafana:latest
+    restart: unless-stopped
+    volumes:
+      - ./config/grafana:/var/lib/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - DATABASE_USER=${TESLAMATE_DATABASE_USER}
+      - DATABASE_PASS=${TESLAMATE_DATABASE_PASS}
+      - DATABASE_NAME=teslamate
+      - DATABASE_HOST=teslamate-database
+    # healthcheck:
+    #   test: "curl -ILXGET http://localhost:3000"
+    ports:
+      - "3000:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.teslamate-grafana.rule=Host(`teslamate-grafana.${DOMAIN}`)"
+      - "traefik.http.routers.teslamate-grafana.tls.certresolver=myresolver"
+      - "autoheal=true"
+
+networks:
+  default:
+    external:
+      name: traefik
