@@ -1,6 +1,6 @@
 services:
   home-assistant:
-    image: homeassistant/home-assistant:2024.7
+    image: homeassistant/home-assistant:2024.9
     restart: unless-stopped
     privileged: true
     volumes:
