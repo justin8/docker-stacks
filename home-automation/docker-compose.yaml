@@ -87,14 +87,11 @@ services:
       - TZ=${TZ}
     volumes:
       - ./config/zigbee2mqtt:/app/data
-      - ./config/shared:/shared
       - /run/udev:/run/udev:ro
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     depends_on:
       - mqtt
-#    healthcheck:
-#      test: "/bin/grep -q ok /shared/reset-zigbee" # Reset when the message is anything other than "ok"
 
 networks:
   default:
