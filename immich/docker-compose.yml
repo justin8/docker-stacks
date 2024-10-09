@@ -6,15 +6,13 @@
 # The compose file on main may not be compatible with the latest release.
 #
 
-name: immich
-
 services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    # extends:
-    #   file: hwaccel.transcoding.yml
-    #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+    extends:
+      file: hwaccel.transcoding.yml
+      service: quicksync # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
@@ -29,15 +27,20 @@ services:
     restart: always
     healthcheck:
       disable: false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`)"
+      - "traefik.http.routers.immich.tls.certresolver=myresolver"
+      # - "traefik.http.routers.sonarr.middlewares=authentik@file"
 
   immich-machine-learning:
     container_name: immich_machine_learning
     # For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
-    # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
-    #   file: hwaccel.ml.yml
-    #   service: cpu # set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable
+    extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
+      file: hwaccel.ml.yml
+      service: cpu # set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
       - model-cache:/cache
     env_file:
@@ -87,5 +90,30 @@ services:
       ]
     restart: always
 
+  backup:
+    container_name: immich_db_dumper
+    image: prodrigestivill/postgres-backup-local:14
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_CLUSTER: "TRUE"
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      SCHEDULE: "@daily"
+      POSTGRES_EXTRA_OPTS: "--clean --if-exists"
+      BACKUP_DIR: /db_dumps
+    volumes:
+      - ${BACKUP_LOCATION}:/db_dumps
+    depends_on:
+      - database
+
 volumes:
   model-cache:
+
+networks:
+  default:
+    external:
+      name: traefik
