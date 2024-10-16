@@ -24,6 +24,10 @@ services:
       - "traefik.http.routers.home-assistant-api.priority=2"
       - "traefik.http.routers.home-assistant-api.rule=Host(`home-assistant.${DOMAIN}`) && PathPrefix(`/api/`)"
       - "traefik.http.routers.home-assistant-api.tls.certresolver=myresolver"
+      - "traefik.http.routers.home-assistant-mobile.rule=Host(`home-assistant-mobile.${DOMAIN}`)"
+      - "traefik.http.routers.home-assistant-mobile.tls.certresolver=myresolver"
+      - "traefik.http.routers.home-assistant-mobile.middlewares=removeuserheader"
+      - "traefik.http.middlewares.removeuserheader.headers.customrequestheaders.Remote-User="
       # No-authentik endpoint (Allows login directly without the auth redirect)
       # - "traefik.http.middlewares.home-assistant-na.headers.customrequestheaders.X-authentik-username=" # Remove auth'd username header to prevent bypass
       # - "traefik.http.routers.home-assistant-na.rule=Host(`home-assistant-na.${DOMAIN}`)"
