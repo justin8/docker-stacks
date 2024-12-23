@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   plex:
     image: ghcr.io/linuxserver/plex

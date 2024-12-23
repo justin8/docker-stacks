@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   sonarr:
     image: ghcr.io/linuxserver/sonarr

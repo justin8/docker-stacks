@@ -1,9 +1,7 @@
-version: "3.3"
-
 services:
 
   traefik:
-    image: "traefik:v2.10"
+    image: "traefik:v2.11"
     restart: unless-stopped
     container_name: "traefik"
     logging:

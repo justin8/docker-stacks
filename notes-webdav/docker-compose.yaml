@@ -1,5 +1,3 @@
-version: "3.7"
-
 # 1Writer can use webdav, so using this to sync it in to the notes that I otherwise use syncthing for
 
 services:

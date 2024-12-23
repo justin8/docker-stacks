@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   komga:
     image: gotson/komga
