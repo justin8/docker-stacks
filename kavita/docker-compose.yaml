@@ -1,0 +1,47 @@
+services:
+  kavita:
+    image: lscr.io/linuxserver/kavita:latest
+    container_name: kavita
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "500M"
+    volumes:
+      - ./config/kavita:/config
+      - ${STORAGE_DIR}:${STORAGE_DIR}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"
+      - "traefik.http.routers.kavita.tls.certresolver=myresolver"
+      #- "traefik.http.routers.kavita.middlewares=authentik@file"
+    # ports:
+    # - "5000:5000"
+    healthcheck:
+      test: "curl -ILXGET http://localhost:5000"
+
+#  komf:
+#    image: sndxr/komf:latest
+#    container_name: komf
+#    ports:
+#      - "8085:8085"
+#    user: "${PUID}:${PGID}"
+#    environment:
+#      - KOMF_KAVITA_BASE_URI=http://kavita:5000
+#      - KOMF_KAVITA_API_KEY=${KOMF_KAVITA_API_KEY}
+#      - KOMF_METADATA_PROVIDERS_MAL_CLIENT_ID=${KOMF_METADATA_PROVIDERS_MAL_CLIENT_ID}
+#      - KOMF_LOG_LEVEL=INFO
+#      # optional jvm options. Example config for low memory usage. Runs guaranteed cleanup up every 3600000ms(1hour)
+#      - JAVA_TOOL_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -XX:ShenandoahGCHeuristics=compact -XX:ShenandoahGuaranteedGCInterval=3600000 -XX:TrimNativeHeapInterval=3600000
+#    volumes:
+#      - ./config/komf:/config #path to directory with application.yml and database file
+#    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: traefik
