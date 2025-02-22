@@ -1,0 +1,28 @@
+services:
+  couchdb:
+    image: couchdb:3.4.2
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - UMASK=0022
+      - TZ=$TZ
+      - COUCHDB_USER=$OBSIDIAN_LIVESYNC_USER
+      - COUCHDB_PASSWORD=$OBSIDIAN_LIVESYNC_PASS
+    volumes:
+      - "./config/data:/opt/couchdb/data"
+      - "./config/local.d:/opt/couchd/etc/local.d"
+      - "./local.ini:/opt/couchdb/etc/local.ini"
+    restart: unless-stopped
+    labels:
+      - autoheal=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.livesync.rule=Host(`livesync.${DOMAIN}`)"
+      - "traefik.http.routers.livesync.tls.certresolver=myresolver"
+      - "traefik.http.services.livesync.loadbalancer.server.port=5984"
+    healthcheck:
+      test: "curl -ILXGET -u '${COUCHDB_USER}:${COUCHDB_PASSWORD}' http://localhost:5984/_up"
+
+networks:
+  default:
+    external:
+      name: traefik
