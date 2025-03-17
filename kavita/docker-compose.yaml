@@ -2,7 +2,7 @@ services:
   kavita:
     image: lscr.io/linuxserver/kavita:latest
     container_name: kavita
-    restart: unless-stopped
+    restart: always
     logging:
       options:
         max-size: "500M"
@@ -39,7 +39,7 @@ services:
 #      - JAVA_TOOL_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -XX:ShenandoahGCHeuristics=compact -XX:ShenandoahGuaranteedGCInterval=3600000 -XX:TrimNativeHeapInterval=3600000
 #    volumes:
 #      - ./config/komf:/config #path to directory with application.yml and database file
-#    restart: unless-stopped
+#    restart: always
 
 networks:
   default:

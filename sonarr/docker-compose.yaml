@@ -2,7 +2,7 @@ services:
   sonarr:
     image: ghcr.io/linuxserver/sonarr
     container_name: "sonarr"
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}

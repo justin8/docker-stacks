@@ -12,7 +12,7 @@ services:
       - "./config/data:/opt/couchdb/data"
       - "./config/local.d:/opt/couchd/etc/local.d"
       - "./local.ini:/opt/couchdb/etc/local.ini"
-    restart: unless-stopped
+    restart: always
     labels:
       - autoheal=true
       - "traefik.enable=true"
@@ -20,9 +20,9 @@ services:
       - "traefik.http.routers.livesync.tls.certresolver=myresolver"
       - "traefik.http.services.livesync.loadbalancer.server.port=5984"
     healthcheck:
-      test: "curl -ILXGET -u '${COUCHDB_USER}:${COUCHDB_PASSWORD}' http://localhost:5984/_up"
+      test: "curl -ILXGET -u '${OBSIDIAN_LIVESYNC_USER}:${OBSIDIAN_LIVESYNC_PASS}' http://localhost:5984/_up"
 
 networks:
   default:
-    external:
-      name: traefik
+    name: traefik
+    external: true

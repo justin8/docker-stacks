@@ -2,7 +2,7 @@ services:
   plex:
     image: ghcr.io/linuxserver/plex
     container_name: plex
-    restart: unless-stopped
+    restart: always
     network_mode: host
     volumes:
       - ./config:/config

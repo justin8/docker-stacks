@@ -2,7 +2,7 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
-    restart: unless-stopped
+    restart: always
     user: "${PUID}:${PGID}"
     logging:
       options:
@@ -22,14 +22,14 @@ services:
       test: "wget http://localhost:9090 -O /dev/null"
   prometheus-container-updater:
     build: prometheus-container-updater
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./config/prometheus:/prometheus
       - /var/run/docker.sock:/var/run/docker.sock
   grafana:
     image: grafana/grafana-oss
     container_name: grafana
-    restart: unless-stopped
+    restart: always
     user: "${PUID}:${PGID}"
     logging:
       options:

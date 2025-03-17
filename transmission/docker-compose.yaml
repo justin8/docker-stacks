@@ -2,7 +2,7 @@ services:
   transmission:
     image: ghcr.io/linuxserver/transmission
     container_name: transmission
-    restart: unless-stopped
+    restart: always
     logging:
       options:
         max-size: "500M"

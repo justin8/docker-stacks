@@ -2,7 +2,7 @@ services:
   radarr:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}

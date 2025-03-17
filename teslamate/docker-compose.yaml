@@ -1,7 +1,7 @@
 services:
   teslamate:
     image: teslamate/teslamate:latest
-    restart: unless-stopped
+    restart: always
     privileged: true
     ports:
       - 4000:4000 # Main service port
@@ -28,7 +28,7 @@ services:
 
   teslamate-database:
     image: postgres:15
-    restart: unless-stopped
+    restart: always
     # labels:
     #   - autoheal=true
     volumes:
@@ -42,7 +42,7 @@ services:
 
   teslamate-grafana:
     image: teslamate/grafana:latest
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./config/grafana:/var/lib/grafana
       - ./grafana.ini:/etc/grafana/grafana.ini

@@ -2,7 +2,7 @@ services:
   sabnzbd:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: "sabnzbd"
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./config:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}
