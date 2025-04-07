@@ -45,6 +45,7 @@ scrape_configs:
     bearer_token: "$HASS_PROMETHEUS_API_KEY"
 
   - job_name: "openwrt"
-    scrape_interval: 60s
+    scrape_interval: 5m
+    scrape_timeout: 1m
     static_configs:
       - targets: ["192.168.4.1:9100"]
