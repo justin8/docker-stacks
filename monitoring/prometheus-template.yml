@@ -21,7 +21,7 @@ scrape_configs:
   - job_name: 'hestia'
     scrape_interval: 5s
     static_configs:
-      - targets: ['hestia.local:19999']
+      - targets: ['hestia.dray.id.au:19999']
     metrics_path: '/api/v1/allmetrics'
     params:
       # format: prometheus | prometheus_all_hosts
@@ -40,7 +40,7 @@ scrape_configs:
   - job_name: 'hass'
     scrape_interval: 60s
     static_configs:
-      - targets: ['hestia.local:8123']
+      - targets: ['hestia.dray.id.au:8123']
     metrics_path: /api/prometheus
     bearer_token: "$HASS_PROMETHEUS_API_KEY"
 
