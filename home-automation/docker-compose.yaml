@@ -12,8 +12,11 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
     ports:
-      - 8123:8123 # Main service port
+      # - 8123:8123 # Main service port, disabled to prevent auth bypass on LAN
       - 21063:21063 # Homekit bridge
+    depends_on:
+      - mqtt
+      - home-assistant-database
     labels:
       - "autoheal=true"
       - "traefik.enable=true"
@@ -21,6 +24,7 @@ services:
       - "traefik.http.routers.home-assistant.rule=Host(`home-assistant.${DOMAIN}`)"
       - "traefik.http.routers.home-assistant.tls.certresolver=myresolver"
       - "traefik.http.routers.home-assistant.middlewares=authentik@file"
+      - "traefik.http.services.home-assistant.loadbalancer.server.port=8123"
       - "traefik.http.routers.home-assistant-api.priority=2"
       - "traefik.http.routers.home-assistant-api.rule=Host(`home-assistant.${DOMAIN}`) && PathPrefix(`/api/`)"
       - "traefik.http.routers.home-assistant-api.tls.certresolver=myresolver"
@@ -60,6 +64,8 @@ services:
       - TZ=${TZ}
     labels:
       - autoheal=true
+    depends_on:
+      - mqtt
 
   mqtt:
     image: eclipse-mosquitto:2
