@@ -22,20 +22,20 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.home-assistant.priority=1"
       - "traefik.http.routers.home-assistant.rule=Host(`home-assistant.${DOMAIN}`)"
-      - "traefik.http.routers.home-assistant.tls.certresolver=myresolver"
+      - "traefik.http.routers.home-assistant.tls=true"
       - "traefik.http.routers.home-assistant.middlewares=authentik@file"
       - "traefik.http.services.home-assistant.loadbalancer.server.port=8123"
       - "traefik.http.routers.home-assistant-api.priority=2"
       - "traefik.http.routers.home-assistant-api.rule=Host(`home-assistant.${DOMAIN}`) && PathPrefix(`/api/`)"
-      - "traefik.http.routers.home-assistant-api.tls.certresolver=myresolver"
+      - "traefik.http.routers.home-assistant-api.tls=true"
       - "traefik.http.routers.home-assistant-mobile.rule=Host(`home-assistant-mobile.${DOMAIN}`)"
-      - "traefik.http.routers.home-assistant-mobile.tls.certresolver=myresolver"
+      - "traefik.http.routers.home-assistant-mobile.tls=true"
       - "traefik.http.routers.home-assistant-mobile.middlewares=removeuserheader"
       - "traefik.http.middlewares.removeuserheader.headers.customrequestheaders.Remote-User="
       # No-authentik endpoint (Allows login directly without the auth redirect)
       # - "traefik.http.middlewares.home-assistant-na.headers.customrequestheaders.X-authentik-username=" # Remove auth'd username header to prevent bypass
       # - "traefik.http.routers.home-assistant-na.rule=Host(`home-assistant-na.${DOMAIN}`)"
-      # - "traefik.http.routers.home-assistant-na.tls.certresolver=myresolver"
+      # - "traefik.http.routers.home-assistant-na.tls=true"
     healthcheck:
       test: "curl -ILXGET http://localhost:8123"
 
@@ -90,7 +90,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.${DOMAIN}`)"
-      - "traefik.http.routers.zigbee2mqtt.tls.certresolver=myresolver"
+      - "traefik.http.routers.zigbee2mqtt.tls=true"
       - "traefik.http.routers.zigbee2mqtt.middlewares=authentik@file"
       - "autoheal=true"
     environment:
