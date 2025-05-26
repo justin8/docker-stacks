@@ -34,6 +34,24 @@ services:
       - ./data/redis:/data
     labels:
       - "autoheal=true"
+  authentik-backup:
+    image: prodrigestivill/postgres-backup-local:14
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_CLUSTER: "TRUE"
+      POSTGRES_USER: ${AUTHENTIK_PG_USER:-authentik}
+      POSTGRES_PASSWORD: ${AUTHENTIK_PG_PASS:-authentik}
+      POSTGRES_DB: ${AUTHENTIK_PG_DB:-authentik}
+      SCHEDULE: "@daily"
+      POSTGRES_EXTRA_OPTS: "--clean --if-exists"
+      BACKUP_DIR: /db_dumps
+    volumes:
+      - ${STORAGE_DIR}/backups/authentik-database:/db_dumps
+    depends_on:
+      - authentik-postgresql
   authentik-server:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.12.3}
     restart: unless-stopped
