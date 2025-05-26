@@ -17,7 +17,7 @@ services:
       - autoheal=true
       - "traefik.enable=true"
       - "traefik.http.routers.livesync.rule=Host(`livesync.${DOMAIN}`)"
-      - "traefik.http.routers.livesync.tls.certresolver=myresolver"
+      - "traefik.http.routers.livesync.tls=true"
       - "traefik.http.services.livesync.loadbalancer.server.port=5984"
     healthcheck:
       test: "curl -ILXGET -u '${OBSIDIAN_LIVESYNC_USER}:${OBSIDIAN_LIVESYNC_PASS}' http://localhost:5984/_up"

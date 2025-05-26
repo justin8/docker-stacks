@@ -30,7 +30,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`)"
-      - "traefik.http.routers.immich.tls.certresolver=myresolver"
+      - "traefik.http.routers.immich.tls=true"
       # - "traefik.http.routers.sonarr.middlewares=authentik@file"
 
   immich-machine-learning:

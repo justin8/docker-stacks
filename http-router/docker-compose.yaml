@@ -1,0 +1,73 @@
+services:
+
+  traefik:
+    image: "traefik:v2.11"
+    restart: always
+    container_name: "traefik"
+    logging:
+      options:
+        max-size: "500M"
+    networks:
+      - traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080" # Dashboard port
+    volumes:
+      - "./config/certs:/certs"
+      - "./traefik.yaml:/etc/traefik/traefik.yaml"
+      - "./traefik-dynamic.yaml:/etc/traefik/traefik-dynamic.yaml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  public-proxy:
+    image: nginx
+    restart: always
+    network_mode: host
+    logging:
+      options:
+        max-size: "500M"
+    volumes:
+      - ./config/certs:/certs
+      - ./nginx.conf:/nginx.conf
+    environment:
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    labels:
+      - autoheal=true
+    depends_on:
+      - certbot
+    command: /bin/bash -c "envsubst '$$DOMAIN' < /nginx.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+  certbot:
+    image: certbot/dns-cloudflare
+    volumes:
+      - ./config/certs:/etc/letsencrypt
+      - ./config/cloudflare.ini:/cloudflare.ini
+    environment:
+      - DOMAIN=${DOMAIN}
+    entrypoint: sh
+    command: -c 'certbot certonly --dns-cloudflare --dns-cloudflare-credentials /cloudflare.ini -d "*.${DOMAIN}" --agree-tos --non-interactive --email ${EMAIL} ; ln -sf $DOMAIN /etc/letsencrypt/live/default'
+
+  cron:
+    build: cron
+    entrypoint: /bin/sh -c "echo '0 0 * * * /usr/local/bin/docker-compose run certbot renew && /usr/local/bin/docker-compose exec public-proxy nginx -s reload' | crontab - && crond -f"
+    working_dir: $PWD
+    volumes:
+      - $PWD:$PWD
+      - /var/run/docker.sock:/var/run/docker.sock
+
+# Example container
+  # whoami:
+  #   image: "traefik/whoami"
+  #   networks:
+  #     - traefik
+  #   container_name: "simple-service"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.whoami.rule=Host(`whoami.dray.id.au`)"
+  #     #- "traefik.http.routers.whoami.entrypoints=websecure" # This is optional
+
+networks:
+  traefik:
+    name: traefik
+    attachable: true

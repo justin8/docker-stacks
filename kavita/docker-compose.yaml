@@ -17,7 +17,7 @@ services:
       - autoheal=true
       - "traefik.enable=true"
       - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"
-      - "traefik.http.routers.kavita.tls.certresolver=myresolver"
+      - "traefik.http.routers.kavita.tls=true"
       #- "traefik.http.routers.kavita.middlewares=authentik@file"
     # ports:
     # - "5000:5000"

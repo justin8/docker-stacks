@@ -23,8 +23,13 @@ http:
       service: api@internal
       middlewares:
         - authentik@file
-      tls:
-        certresolver: myresolver
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/live/default/fullchain.pem
+        keyFile: /certs/live/default/privkey.pem
 #     service-home-assistant:
 #       rule: "Host(`home-assistant.dray.id.au`)"
 #       service: "service-home-assistant"

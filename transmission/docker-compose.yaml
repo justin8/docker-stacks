@@ -17,7 +17,7 @@ services:
       - autoheal=true
       - "traefik.enable=true"
       - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
-      - "traefik.http.routers.transmission.tls.certresolver=myresolver"
+      - "traefik.http.routers.transmission.tls=true"
       - "traefik.http.routers.transmission.middlewares=authentik@file"
     ports:
       - "13100:13100"

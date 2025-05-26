@@ -16,7 +16,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.teslamate.rule=Host(`teslamate.${DOMAIN}`)"
-      - "traefik.http.routers.teslamate.tls.certresolver=myresolver"
+      - "traefik.http.routers.teslamate.tls=true"
       - "traefik.http.routers.teslamate.middlewares=authentik@file"
     cap_drop:
       - all
@@ -50,7 +50,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.teslamate-grafana.rule=Host(`teslamate-grafana.${DOMAIN}`)"
-      - "traefik.http.routers.teslamate-grafana.tls.certresolver=myresolver"
+      - "traefik.http.routers.teslamate-grafana.tls=true"
       
   mosquitto:
     image: eclipse-mosquitto:2

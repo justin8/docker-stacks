@@ -85,11 +85,11 @@ services:
       ## HTTP Routers
       - "traefik.http.routers.authentik.priority=1"
       - "traefik.http.routers.authentik.rule=Host(`auth.${DOMAIN}`)"
-      - "traefik.http.routers.authentik.tls.certresolver=myresolver"
+      - "traefik.http.routers.authentik.tls=true"
       ## Individual Application forwardAuth regex (catch any subdomain using individual application forwardAuth)
       - "traefik.http.routers.authentik-outpost.priority=50"
       - "traefik.http.routers.authentik-outpost.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.$DOMAIN`) && PathPrefix(`/outpost.goauthentik.io/`)"
-      - "traefik.http.routers.authentik-outpost.tls.certresolver=myresolver"
+      - "traefik.http.routers.authentik-outpost.tls=true"
       ## Forward Auth Outpost Config (can also be done in the Traefik config file)
       # - "traefik.http.middlewares.authentik.forwardauth.address=http://authentik-server:9000/outpost.goauthentik.io/auth/traefik"
       # - "traefik.http.middlewares.authentik.forwardauth.trustForwardHeader=true"
@@ -142,7 +142,7 @@ services:
   #     - "traefik.enable=true"
   #     ## HTTP Routers
   #     - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)"
-  #     - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+  #     - "traefik.http.routers.whoami.tls=true"
   #     ## Middlewares
   #     - "traefik.http.routers.whoami.middlewares=authentik@docker"
 
