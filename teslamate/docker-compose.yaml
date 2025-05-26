@@ -11,26 +11,19 @@ services:
       - DATABASE_PASS=${TESLAMATE_DATABASE_PASS}
       - DATABASE_NAME=teslamate
       - DATABASE_HOST=teslamate-database
-      - MQTT_HOST=mqtt.dray.id.au
-      - MQTT_USERNAME=${TESLAMATE_MQTT_USER}
-      - MQTT_PASSWORD=${TESLAMATE_MQTT_PASS}
+      - MQTT_HOST=mosquitto
       - TZ=${TZ}
     labels:
-      - "autoheal=true"
       - "traefik.enable=true"
       - "traefik.http.routers.teslamate.rule=Host(`teslamate.${DOMAIN}`)"
       - "traefik.http.routers.teslamate.tls.certresolver=myresolver"
       - "traefik.http.routers.teslamate.middlewares=authentik@file"
-    # healthcheck:
-    #   test: "curl -ILXGET http://localhost:8123"
     cap_drop:
       - all
 
   teslamate-database:
-    image: postgres:15
+    image: postgres:17
     restart: always
-    # labels:
-    #   - autoheal=true
     volumes:
       - ./config/database:/var/lib/postgresql/data
     environment:
@@ -52,17 +45,47 @@ services:
       - DATABASE_PASS=${TESLAMATE_DATABASE_PASS}
       - DATABASE_NAME=teslamate
       - DATABASE_HOST=teslamate-database
-    # healthcheck:
-    #   test: "curl -ILXGET http://localhost:3000"
     ports:
       - "3000:3000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.teslamate-grafana.rule=Host(`teslamate-grafana.${DOMAIN}`)"
       - "traefik.http.routers.teslamate-grafana.tls.certresolver=myresolver"
-      - "autoheal=true"
+      
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: always
+    command: mosquitto -c /mosquitto-no-auth.conf
+    # ports:
+    #   - 1883:1883
+    volumes:
+      - mosquitto-conf:/mosquitto/config
+      - mosquitto-data:/mosquitto/data
+
+  backup:
+    image: prodrigestivill/postgres-backup-local:14
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: teslamate-database
+      POSTGRES_CLUSTER: "TRUE"
+      POSTGRES_USER: ${TESLAMATE_DATABASE_USER}
+      POSTGRES_PASSWORD: ${TESLAMATE_DATABASE_PASS}
+      POSTGRES_DB: teslamate
+      SCHEDULE: "@daily"
+      POSTGRES_EXTRA_OPTS: "--clean --if-exists"
+      BACKUP_DIR: /db_dumps
+    volumes:
+      - ${STORAGE_DIR}/backups/teslamate-database:/db_dumps
+    depends_on:
+      - teslamate-database
 
 networks:
   default:
     external:
       name: traefik
+
+volumes:
+  mosquitto-conf:
+  mosquitto-data:
