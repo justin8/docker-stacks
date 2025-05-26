@@ -13,12 +13,12 @@ services:
       - "autoheal=true"
       - "traefik.enable=true"
       - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
-      - "traefik.http.routers.prowlarr.tls.certresolver=myresolver"
+      - "traefik.http.routers.prowlarr.tls=true"
       - "traefik.http.routers.prowlarr.middlewares=authentik@file"
     healthcheck:
       test: "curl -ILXGET http://localhost:9696"
 
 networks:
   default:
-    external:
-      name: traefik
+    external: true
+    name: traefik

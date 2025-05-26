@@ -42,11 +42,11 @@ services:
       - "autoheal=true"
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
-      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      - "traefik.http.routers.grafana.tls=true"
     healthcheck:
       test: "curl -ILXGET http://localhost:3000"
 
 networks:
   default:
-    external:
-      name: traefik
+    external: true
+    name: traefik

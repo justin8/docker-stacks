@@ -83,8 +83,8 @@ services:
 
 networks:
   default:
-    external:
-      name: traefik
+    external: true
+    name: traefik
 
 volumes:
   mosquitto-conf:
