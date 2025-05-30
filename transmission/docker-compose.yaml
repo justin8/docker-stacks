@@ -2,27 +2,44 @@ services:
   transmission:
     image: ghcr.io/linuxserver/transmission
     container_name: transmission
+    network_mode: service:vpn
     restart: always
     logging:
       options:
         max-size: "500M"
     volumes:
-      - ./config:/config
+      - ./config/transmission:/config
       - ${STORAGE_DIR}:${STORAGE_DIR}
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
+    depends_on:
+      vpn:
+        condition: service_healthy
+        restart: true
     labels:
       - autoheal=true
       - "traefik.enable=true"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
       - "traefik.http.routers.transmission.tls=true"
       - "traefik.http.routers.transmission.middlewares=authentik@file"
-    ports:
-      - "13100:13100"
     healthcheck:
       test: "curl -ILXGET http://localhost:9091"
+  vpn:
+    image: jordanpotter/wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    volumes:
+      - ./config/vpn/wg0.conf:/etc/wireguard/wg0.conf
+      - /lib/modules:/lib/modules:r
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+    healthcheck:
+      test: "ping -c 1 1.1.1.1"
 
 networks:
   default:
