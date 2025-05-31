@@ -21,6 +21,7 @@ http:
     dashboard:
       rule: Host(`traefik.dray.id.au`)
       service: api@internal
+      tls: true
       middlewares:
         - authentik@file
 
@@ -30,4 +31,3 @@ tls:
       defaultCertificate:
         certFile: /certs/live/default/fullchain.pem
         keyFile: /certs/live/default/privkey.pem
-

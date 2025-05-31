@@ -1,7 +1,6 @@
 services:
-
   traefik:
-    image: "traefik:v2"
+    image: "traefik:v3"
     restart: always
     container_name: "traefik"
     logging:
@@ -12,7 +11,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080" # Dashboard port
+      # - "8080:8080" # Dashboard port
     volumes:
       - "./config/certs:/certs"
       - "./traefik.yaml:/etc/traefik/traefik.yaml"
@@ -57,15 +56,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
 # Example container
-  # whoami:
-  #   image: "traefik/whoami"
-  #   networks:
-  #     - traefik
-  #   container_name: "simple-service"
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.whoami.rule=Host(`whoami.dray.id.au`)"
-  #     #- "traefik.http.routers.whoami.entrypoints=websecure" # This is optional
+# whoami:
+#   image: "traefik/whoami"
+#   networks:
+#     - traefik
+#   container_name: "simple-service"
+#   labels:
+#     - "traefik.enable=true"
+#     - "traefik.http.routers.whoami.rule=Host(`whoami.dray.id.au`)"
+#     #- "traefik.http.routers.whoami.entrypoints=websecure" # This is optional
 
 networks:
   traefik:
